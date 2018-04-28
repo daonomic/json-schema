@@ -33,26 +33,26 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
     }
 
     @Override
-    public ObjectNode toJsonNode(JsonNodeFactory factory) {
-        ObjectNode node = factory.objectNode();
+    public ObjectNode toJsonNode() {
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", "object");
         List<String> required = getRequiredProperties();
         if (!required.isEmpty()) {
-            node.set("required", Utils.toArrayNode(factory, required));
+            node.set("required", Utils.toArrayNode(JsonNodeFactory.instance, required));
         }
-        ObjectNode propertiesNode = factory.objectNode();
+        ObjectNode propertiesNode = JsonNodeFactory.instance.objectNode();
         node.set("properties", propertiesNode);
         for (JsonSchemaProperty property : properties) {
-            propertiesNode.set(property.getName(), property.toJsonNode(factory));
+            propertiesNode.set(property.getName(), property.toJsonNode());
         }
         if (!dependencies.isEmpty()) {
-            ObjectNode dependenciesNode = factory.objectNode();
+            ObjectNode dependenciesNode = JsonNodeFactory.instance.objectNode();
             node.set("dependencies", dependenciesNode);
             dependencies.forEach((field, dep) ->
-                dependenciesNode.set(field, dep.toJsonNode(factory))
+                dependenciesNode.set(field, dep.toJsonNode())
             );
         }
-        handleNode(factory, node);
+        handleNode(node);
         return node;
     }
 

@@ -15,10 +15,10 @@ public class ArrayType implements JsonSchemaType {
     }
 
     @Override
-    public ObjectNode toJsonNode(JsonNodeFactory factory) {
-        ObjectNode node = factory.objectNode();
+    public ObjectNode toJsonNode() {
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", "array");
-        node.set("items", itemType.toJsonNode(factory));
+        node.set("items", itemType.toJsonNode());
         return node;
     }
 }

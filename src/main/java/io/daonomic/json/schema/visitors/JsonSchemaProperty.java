@@ -15,9 +15,9 @@ public class JsonSchemaProperty extends HasHandlers<JsonSchemaProperty> {
         this.required = required;
     }
 
-    public ObjectNode toJsonNode(JsonNodeFactory nodeFactory) {
-        ObjectNode result = type.toJsonNode(nodeFactory);
-        handleNode(nodeFactory, result);
+    public ObjectNode toJsonNode() {
+        ObjectNode result = type.toJsonNode();
+        handleNode(result);
         return result;
     }
 

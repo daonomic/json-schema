@@ -45,7 +45,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
 
     private Dependency changeDependency(OneOfType oneOfType, JsonSchemaProperty property, ShowIf annotation) {
         oneOfType.addType(createPositive(property, annotation));
-        oneOfType.addType(createNegative(property, annotation));
+        oneOfType.addType(createNegative(annotation));
         return new SchemaDependency(oneOfType);
     }
 
@@ -60,7 +60,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         return result;
     }
 
-    private JsonSchemaType createNegative(JsonSchemaProperty property, ShowIf annotation) {
+    private JsonSchemaType createNegative(ShowIf annotation) {
         if (annotation.negative().length == 0) {
             ObjectType notType = new ObjectType();
             notType.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(annotation.positive()), false));
@@ -85,14 +85,14 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         }
 
         @Override
-        public ObjectNode toJsonNode(JsonNodeFactory factory) {
-            ObjectNode result = factory.objectNode();
-            result.set("enum", getValue(factory, values));
+        public ObjectNode toJsonNode() {
+            ObjectNode result = JsonNodeFactory.instance.objectNode();
+            result.set("enum", getValue(values));
             return result;
         }
 
-        private ArrayNode getValue(JsonNodeFactory factory, String[] value) {
-            ArrayNode result = factory.arrayNode();
+        private ArrayNode getValue(String[] value) {
+            ArrayNode result = JsonNodeFactory.instance.arrayNode();
             for (String s : value) {
                 try {
                     result.add(objectMapper.readValue(s, JsonNode.class));

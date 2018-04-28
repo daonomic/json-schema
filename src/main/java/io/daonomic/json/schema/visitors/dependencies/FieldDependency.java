@@ -15,13 +15,13 @@ public class FieldDependency implements Dependency {
     }
 
     @Override
-    public JsonNode toJsonNode(JsonNodeFactory factory) {
+    public JsonNode toJsonNode() {
         if (fields.isEmpty()) {
             return null;
         } else if (fields.size() == 1) {
-            return factory.textNode(fields.get(0));
+            return JsonNodeFactory.instance.textNode(fields.get(0));
         } else {
-            ArrayNode array = factory.arrayNode();
+            ArrayNode array = JsonNodeFactory.instance.arrayNode();
             for (String field : fields) {
                 array.add(field);
             }

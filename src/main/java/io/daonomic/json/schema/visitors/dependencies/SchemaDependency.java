@@ -1,7 +1,6 @@
 package io.daonomic.json.schema.visitors.dependencies;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.daonomic.json.schema.JsonSchemaType;
 
 public class SchemaDependency implements Dependency {
@@ -20,7 +19,7 @@ public class SchemaDependency implements Dependency {
     }
 
     @Override
-    public JsonNode toJsonNode(JsonNodeFactory factory) {
-        return schemaType.toJsonNode(factory);
+    public JsonNode toJsonNode() {
+        return schemaType.toJsonNode();
     }
 }

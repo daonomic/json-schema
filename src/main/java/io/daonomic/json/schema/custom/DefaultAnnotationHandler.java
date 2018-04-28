@@ -18,7 +18,7 @@ public class DefaultAnnotationHandler implements PropertyAnnotationHandler<Defau
 
     @Override
     public JsonSchemaProperty handle(JsonSchemaProperty property, Default annotation) {
-        return property.addHandler((factory, node) -> {
+        return property.addHandler(node -> {
             switch (annotation.type()) {
                 case STRING:
                     node.put("default", annotation.value());

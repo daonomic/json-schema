@@ -40,7 +40,7 @@ public class JsonSchemaTest {
 
     @Test(dataProvider = "data")
     public void test(Class testClass, String testSchemaName) throws IOException {
-        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode(objectMapper.getNodeFactory()));
+        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testSchemaName + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
