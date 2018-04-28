@@ -15,16 +15,16 @@ public class IntegerFormatVisitor extends AbstractFormatVisitor<PrimitiveType> i
 
     @Override
     public void format(JsonValueFormat format) {
-        //todo
+        System.out.println();
     }
 
     @Override
     public void enumTypes(Set<String> enums) {
-        //todo
+        System.out.println();
     }
 
     @Override
     public void numberType(JsonParser.NumberType type) {
-        //todo
+        System.out.println();
     }
 }

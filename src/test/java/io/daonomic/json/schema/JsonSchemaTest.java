@@ -17,36 +17,50 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class JsonSchemaTest {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    public JsonSchemaTest() {
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    }
-
     @DataProvider
-    public static Object[][] data() {
+    public static Object[][] data1() {
         return new Object[][]{
-            new Object[]{Parent.class, "Parent"},
-            new Object[]{RequiredAnnotationTest.class, "RequiredAnnotationTest"},
-            new Object[]{TitleTest.class, "TitleTest"},
-            new Object[]{DefaultTest.class, "DefaultTest"},
-            new Object[]{IgnoreTest.class, "IgnoreTest"},
-            new Object[]{ShowIfTest1.class, "ShowIfTest1"},
-            new Object[]{ShowIfTest2.class, "ShowIfTest2"},
-            new Object[]{ShowIfTest3.class, "ShowIfTest3"},
-            new Object[]{ShowIfTest4.class, "ShowIfTest4"},
-            new Object[]{OptionalChildTest1.class, "OptionalChildTest1"},
-            new Object[]{OptionalChildTest2.class, "OptionalChildTest2"}
+            new Object[]{Parent.class},
+            new Object[]{RequiredAnnotationTest.class},
+            new Object[]{TitleTest.class},
+            new Object[]{DefaultTest.class},
+            new Object[]{IgnoreTest.class},
+            new Object[]{ShowIfTest1.class},
+            new Object[]{ShowIfTest2.class},
+            new Object[]{ShowIfTest3.class},
+            new Object[]{ShowIfTest4.class},
+            new Object[]{OptionalChildTest1.class},
+            new Object[]{OptionalChildTest2.class}
         };
     }
 
-    @Test(dataProvider = "data")
-    public void test(Class testClass, String testSchemaName) throws IOException {
+    @Test(dataProvider = "data1")
+    public void test1(Class testClass) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode());
-        try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testSchemaName + ".json")) {
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
         }
+    }
 
+    @DataProvider
+    public static Object[][] data2() {
+        return new Object[][]{
+            new Object[]{DateTest.class}
+        };
+    }
+
+    @Test(dataProvider = "data2")
+    public void test2(Class testClass) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode());
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
+            assertNotNull(in, "not found resource. schema=" + jsonSchema);
+            assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
+        }
     }
 }

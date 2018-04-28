@@ -14,8 +14,7 @@ public class StringFormatVisitor extends AbstractFormatVisitor<PrimitiveType> im
 
     @Override
     public void format(JsonValueFormat format) {
-        //todo
-        System.out.println();
+        schemaType.setFormat(format.toString());
     }
 
     @Override

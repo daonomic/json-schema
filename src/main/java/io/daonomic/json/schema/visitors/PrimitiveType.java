@@ -10,9 +10,18 @@ import java.util.List;
 public class PrimitiveType implements JsonSchemaType {
     private final Type type;
     private List<String> enums;
+    private String format;
 
     public PrimitiveType(Type type) {
         this.type = type;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 
     @Override
@@ -21,6 +30,9 @@ public class PrimitiveType implements JsonSchemaType {
         node.put("type", type.name().toLowerCase());
         if (enums != null) {
             node.set("enum", Utils.toArrayNode(JsonNodeFactory.instance, enums));
+        }
+        if (format != null) {
+            node.put("format", format);
         }
         return node;
     }
