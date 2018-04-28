@@ -1,0 +1,33 @@
+{
+  "type" : "object",
+  "required" : [ "testValue" ],
+  "properties" : {
+    "testValue" : {
+      "type" : "string",
+      "enum" : [ "ONE", "TWO", "THREE" ]
+    }
+  },
+  "dependencies" : {
+    "testValue" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "required" : [ "testNegative" ],
+        "properties" : {
+          "testValue" : {
+            "enum" : [ "ONE" ]
+          },
+          "testNegative" : {
+            "type" : "string"
+          }
+        }
+      }, {
+        "type" : "object",
+        "properties" : {
+          "testValue" : {
+            "enum" : [ "TWO", "THREE" ]
+          }
+        }
+      } ]
+    }
+  }
+}

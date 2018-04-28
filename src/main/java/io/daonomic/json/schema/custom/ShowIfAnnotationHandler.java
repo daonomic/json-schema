@@ -6,13 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.daonomic.json.schema.Utils;
+import io.daonomic.json.schema.JsonSchemaType;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandler;
 import io.daonomic.json.schema.visitors.JsonSchemaProperty;
+import io.daonomic.json.schema.visitors.NotType;
 import io.daonomic.json.schema.visitors.ObjectType;
+import io.daonomic.json.schema.visitors.OneOfType;
+import io.daonomic.json.schema.visitors.dependencies.Dependency;
+import io.daonomic.json.schema.visitors.dependencies.SchemaDependency;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf> {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -23,41 +26,49 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
 
     @Override
     public JsonSchemaProperty handle(ObjectType objectType, JsonSchemaProperty property, ShowIf annotation) {
-        objectType.addHandler((factory, node) -> {
-            JsonNode value = getValue(factory, annotation);
-
-            ObjectNode dependency = factory.objectNode();
-            ArrayNode array = factory.arrayNode();
-            ObjectNode positive = factory.objectNode();
-            if (annotation.required()) {
-                positive.set("required", Utils.toArrayNode(factory, Arrays.asList(property.getName())));
+        objectType.addDependency(annotation.field(), existing -> {
+            if (existing == null) {
+                return changeDependency(new OneOfType(), property, annotation);
+            } else if (existing instanceof SchemaDependency) {
+                JsonSchemaType schemaType = ((SchemaDependency) existing).getSchemaType();
+                if (schemaType instanceof OneOfType) {
+                    return changeDependency((OneOfType) schemaType, property, annotation);
+                } else {
+                    throw new IllegalStateException("Only oneOf dependency is allowed");
+                }
+            } else {
+                throw new IllegalStateException("Only schema dependency is allowed");
             }
-            ObjectNode positiveProperties = factory.objectNode();
-            positiveProperties.set(annotation.field(), factory.objectNode().set("enum", value));
-            positiveProperties.set(property.getName(), property.toJsonNode(factory));
-            positive.set("properties", positiveProperties);
-            array.add(positive);
-            ObjectNode negative = factory.objectNode();
-            ObjectNode negativeProperties = factory.objectNode();
-            negativeProperties.set(annotation.field(), factory.objectNode().set("not", factory.objectNode().set("enum", value)));
-            negative.set("properties", negativeProperties);
-            array.add(negative);
-            dependency.set("oneOf", array);
-            node.set("dependencies", factory.objectNode().set(annotation.field(), dependency));
         });
         return null;
     }
 
-    private JsonNode getValue(JsonNodeFactory nodeFactory, ShowIf annotation) {
-        try {
-            JsonNode value = objectMapper.readValue(annotation.value(), JsonNode.class);
-            if (value.isArray()) {
-                return value;
-            } else {
-                return nodeFactory.arrayNode().add(value);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private Dependency changeDependency(OneOfType oneOfType, JsonSchemaProperty property, ShowIf annotation) {
+        oneOfType.addType(createPositive(property, annotation));
+        oneOfType.addType(createNegative(property, annotation));
+        return new SchemaDependency(oneOfType);
+    }
+
+    private JsonSchemaType createPositive(JsonSchemaProperty property, ShowIf annotation) {
+        ObjectType result = new ObjectType();
+        result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(annotation.positive()), false));
+        if (annotation.required()) {
+            result.addProperty(property.required(true));
+        } else {
+            result.addProperty(property);
+        }
+        return result;
+    }
+
+    private JsonSchemaType createNegative(JsonSchemaProperty property, ShowIf annotation) {
+        if (annotation.negative().length == 0) {
+            ObjectType notType = new ObjectType();
+            notType.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(annotation.positive()), false));
+            return new NotType(notType);
+        } else {
+            ObjectType result = new ObjectType();
+            result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(annotation.negative()), false));
+            return result;
         }
     }
 
@@ -65,4 +76,32 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     public JsonSchemaProperty handle(JsonSchemaProperty property, ShowIf annotation) {
         return null;
     }
+
+    private class EnumSchemaType implements JsonSchemaType {
+        private final String[] values;
+
+        private EnumSchemaType(String[] values) {
+            this.values = values;
+        }
+
+        @Override
+        public ObjectNode toJsonNode(JsonNodeFactory factory) {
+            ObjectNode result = factory.objectNode();
+            result.set("enum", getValue(factory, values));
+            return result;
+        }
+
+        private ArrayNode getValue(JsonNodeFactory factory, String[] value) {
+            ArrayNode result = factory.arrayNode();
+            for (String s : value) {
+                try {
+                    result.add(objectMapper.readValue(s, JsonNode.class));
+                } catch (IOException e) {
+                    result.add(s);
+                }
+            }
+            return result;
+        }
+    }
+
 }

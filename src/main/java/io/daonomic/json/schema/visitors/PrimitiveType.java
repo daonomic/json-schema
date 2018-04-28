@@ -16,11 +16,11 @@ public class PrimitiveType implements JsonSchemaType {
     }
 
     @Override
-    public ObjectNode toJsonNode(JsonNodeFactory nodeFactory) {
-        ObjectNode node = nodeFactory.objectNode();
+    public ObjectNode toJsonNode(JsonNodeFactory factory) {
+        ObjectNode node = factory.objectNode();
         node.put("type", type.name().toLowerCase());
         if (enums != null) {
-            node.set("enum", Utils.toArrayNode(nodeFactory, enums));
+            node.set("enum", Utils.toArrayNode(factory, enums));
         }
         return node;
     }

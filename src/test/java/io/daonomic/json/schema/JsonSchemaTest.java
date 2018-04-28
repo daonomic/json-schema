@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class JsonSchemaTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -29,7 +30,11 @@ public class JsonSchemaTest {
             new Object[]{RequiredAnnotationTest.class, "RequiredAnnotationTest"},
             new Object[]{TitleTest.class, "TitleTest"},
             new Object[]{DefaultTest.class, "DefaultTest"},
-            new Object[]{IgnoreTest.class, "IgnoreTest"}
+            new Object[]{IgnoreTest.class, "IgnoreTest"},
+            new Object[]{ShowIfTest1.class, "ShowIfTest1"},
+            new Object[]{ShowIfTest2.class, "ShowIfTest2"},
+            new Object[]{ShowIfTest3.class, "ShowIfTest3"},
+            new Object[]{ShowIfTest4.class, "ShowIfTest4"}
         };
     }
 
@@ -37,6 +42,7 @@ public class JsonSchemaTest {
     public void test(Class testClass, String testSchemaName) throws IOException {
         String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode(objectMapper.getNodeFactory()));
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testSchemaName + ".json")) {
+            assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
         }
 

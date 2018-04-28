@@ -1,0 +1,35 @@
+{
+  "type" : "object",
+  "required" : [ "testValue" ],
+  "properties" : {
+    "testValue" : {
+      "type" : "string",
+      "enum" : [ "ONE", "TWO", "THREE" ]
+    }
+  },
+  "dependencies" : {
+    "testValue" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "required" : [ "shownIfOneOrThree" ],
+        "properties" : {
+          "testValue" : {
+            "enum" : [ "ONE", "THREE" ]
+          },
+          "shownIfOneOrThree" : {
+            "type" : "string"
+          }
+        }
+      }, {
+        "not" : {
+          "type" : "object",
+          "properties" : {
+            "testValue" : {
+              "enum" : [ "ONE", "THREE" ]
+            }
+          }
+        }
+      } ]
+    }
+  }
+}

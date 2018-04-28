@@ -4,33 +4,55 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 import io.daonomic.json.schema.Utils;
+import io.daonomic.json.schema.visitors.dependencies.Dependency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
 public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaType {
     private final List<JsonSchemaProperty> properties = new ArrayList<>();
+    private final Map<String, Dependency> dependencies = new HashMap<>();
 
-    void addProperty(JsonSchemaProperty property) {
+    public void addProperty(JsonSchemaProperty property) {
         this.properties.add(property);
     }
 
+    public void addDependency(String field, Function<Dependency, Dependency> changeDependency) {
+        Dependency dependency = dependencies.get(field);
+        Dependency newDependency = changeDependency.apply(dependency);
+        if (newDependency != null) {
+            dependencies.put(field, newDependency);
+        } else {
+            dependencies.remove(field);
+        }
+    }
+
     @Override
-    public ObjectNode toJsonNode(JsonNodeFactory nodeFactory) {
-        ObjectNode node = nodeFactory.objectNode();
+    public ObjectNode toJsonNode(JsonNodeFactory factory) {
+        ObjectNode node = factory.objectNode();
         node.put("type", "object");
         List<String> required = getRequiredProperties();
         if (!required.isEmpty()) {
-            node.set("required", Utils.toArrayNode(nodeFactory, required));
+            node.set("required", Utils.toArrayNode(factory, required));
         }
-        ObjectNode propertiesNode = nodeFactory.objectNode();
+        ObjectNode propertiesNode = factory.objectNode();
         node.set("properties", propertiesNode);
         for (JsonSchemaProperty property : properties) {
-            propertiesNode.set(property.getName(), property.toJsonNode(nodeFactory));
+            propertiesNode.set(property.getName(), property.toJsonNode(factory));
         }
-        handleNode(nodeFactory, node);
+        if (!dependencies.isEmpty()) {
+            ObjectNode dependenciesNode = factory.objectNode();
+            node.set("dependencies", dependenciesNode);
+            dependencies.forEach((field, dep) ->
+                dependenciesNode.set(field, dep.toJsonNode(factory))
+            );
+        }
+        handleNode(factory, node);
         return node;
     }
 
@@ -40,4 +62,5 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
             .map(JsonSchemaProperty::getName)
             .collect(toList());
     }
+
 }

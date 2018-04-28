@@ -4,5 +4,5 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface JsonSchemaType {
-    ObjectNode toJsonNode(JsonNodeFactory nodeFactory);
+    ObjectNode toJsonNode(JsonNodeFactory factory);
 }
