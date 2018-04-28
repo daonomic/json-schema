@@ -1,0 +1,40 @@
+{
+  "type": "object",
+  "properties": {
+    "whitelist": {
+      "type": "boolean"
+    }
+  },
+  "dependencies": {
+    "whitelist": {
+      "oneOf": [
+        {
+          "properties": {
+            "whitelist": {
+              "not": {
+                "enum": [
+                  true
+                ]
+              }
+            }
+          }
+        },
+        {
+          "properties": {
+            "whitelist": {
+              "enum": [
+                true
+              ]
+            },
+            "whitelisted": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

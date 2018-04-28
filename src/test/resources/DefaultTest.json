@@ -1,0 +1,22 @@
+{
+  "type" : "object",
+  "properties" : {
+    "default1" : {
+      "type" : "string",
+      "default" : "value1"
+    },
+    "default2" : {
+      "type" : "string",
+      "default" : {
+        "json" : true
+      }
+    },
+    "default3" : {
+      "type" : "string",
+      "default" : {
+        "key1" : "value1",
+        "key2" : "value2"
+      }
+    }
+  }
+}
