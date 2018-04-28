@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
+import io.daonomic.json.schema.annotations.Order;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandler;
 import io.daonomic.json.schema.visitors.JsonSchemaProperty;
 import io.daonomic.json.schema.visitors.NotType;
@@ -17,6 +18,7 @@ import io.daonomic.json.schema.visitors.dependencies.SchemaDependency;
 
 import java.io.IOException;
 
+@Order(Integer.MAX_VALUE)
 public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 

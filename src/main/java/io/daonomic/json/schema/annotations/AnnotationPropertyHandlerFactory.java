@@ -11,9 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory {
     private final Map<Class<? extends Annotation>, Class<? extends PropertyAnnotationHandler>> defaultAnnotationHandlers;
@@ -28,14 +27,23 @@ public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory 
     @SuppressWarnings("unchecked")
     @Override
     public PropertyHandler create(BeanProperty beanProperty) {
-        ArrayList<PropertyHandler> list = new ArrayList<>();
+        List<HandlerAndOrder> list = new ArrayList<>();
         for (Annotation annotation : beanProperty.getMember().getAllAnnotations().annotations()) {
             Class<? extends PropertyAnnotationHandler> handlerClass = getByAnnotation(annotation);
             if (handlerClass != null) {
-                list.add(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation));
+                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation), getOrder(handlerClass)));
             }
         }
-        return new MultiplePropertyHandler(list);
+        return new MultiplePropertyHandler(list.stream().sorted(Comparator.comparingInt(e2 -> e2.order)).map(e -> e.handler).collect(Collectors.toList()));
+    }
+
+    private int getOrder(Class<?> handlerClass) {
+        Order order = handlerClass.getAnnotation(Order.class);
+        if (order != null) {
+            return order.value();
+        } else {
+            return 0;
+        }
     }
 
     private Class<? extends PropertyAnnotationHandler> getByAnnotation(Annotation annotation) {
@@ -48,6 +56,16 @@ public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory 
                 return handlerClass.value();
             }
             return null;
+        }
+    }
+
+    private static class HandlerAndOrder {
+        private final PropertyHandler handler;
+        private final int order;
+
+        public HandlerAndOrder(PropertyHandler handler, int order) {
+            this.handler = handler;
+            this.order = order;
         }
     }
 }

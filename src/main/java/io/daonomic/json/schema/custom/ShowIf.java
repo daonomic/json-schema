@@ -1,5 +1,6 @@
 package io.daonomic.json.schema.custom;
 
+import io.daonomic.json.schema.annotations.Order;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandlerClass;
 
 import java.lang.annotation.ElementType;

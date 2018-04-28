@@ -17,7 +17,8 @@
             "enum" : [ "ONE", "THREE" ]
           },
           "shownIfOneOrThree" : {
-            "type" : "string"
+            "type" : "string",
+            "title" : "Should be shown if ONE or THREE selected"
           }
         }
       }, {
