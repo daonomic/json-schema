@@ -1,6 +1,5 @@
 package io.daonomic.json.schema.visitors;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 
@@ -23,6 +22,10 @@ public class JsonSchemaProperty extends HasHandlers<JsonSchemaProperty> {
 
     public String getName() {
         return name;
+    }
+
+    public JsonSchemaType getType() {
+        return type;
     }
 
     public boolean isRequired() {

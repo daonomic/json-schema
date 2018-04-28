@@ -7,4 +7,8 @@ public class Parent {
     public List<Child> children;
     public int intValue;
     public Integer integerValue;
+
+    public static class Child {
+        public String name;
+    }
 }

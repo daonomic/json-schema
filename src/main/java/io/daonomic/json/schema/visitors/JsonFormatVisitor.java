@@ -47,6 +47,21 @@ public class JsonFormatVisitor extends JsonFormatVisitorWrapper.Base {
         return setCurrent(new ArrayFormatVisitor(objectMapper, propertyHandlerFactory));
     }
 
+    @Override
+    public JsonNullFormatVisitor expectNullFormat(JavaType type) throws JsonMappingException {
+        return super.expectNullFormat(type);
+    }
+
+    @Override
+    public JsonAnyFormatVisitor expectAnyFormat(JavaType type) throws JsonMappingException {
+        return super.expectAnyFormat(type);
+    }
+
+    @Override
+    public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException {
+        return super.expectMapFormat(type);
+    }
+
     private <T extends AbstractFormatVisitor> T setCurrent(T current) {
         if (this.current != null) {
             throw new IllegalStateException("Current visitor already set");

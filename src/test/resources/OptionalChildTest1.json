@@ -1,0 +1,23 @@
+{
+  "type" : "object",
+  "properties" : {
+    "field1" : {
+      "type" : "string"
+    },
+    "child" : {
+      "type" : "object",
+      "properties" : {
+        "field1" : {
+          "type" : "string"
+        },
+        "field2" : {
+          "type" : "string"
+        }
+      },
+      "dependencies" : {
+        "field1" : [ "field2" ],
+        "field2" : [ "field1" ]
+      }
+    }
+  }
+}

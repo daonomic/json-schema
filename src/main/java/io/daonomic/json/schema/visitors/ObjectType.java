@@ -1,5 +1,6 @@
 package io.daonomic.json.schema.visitors;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
@@ -48,15 +49,22 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
         if (!dependencies.isEmpty()) {
             ObjectNode dependenciesNode = JsonNodeFactory.instance.objectNode();
             node.set("dependencies", dependenciesNode);
-            dependencies.forEach((field, dep) ->
-                dependenciesNode.set(field, dep.toJsonNode())
+            dependencies.forEach((field, dep) -> {
+                    JsonNode dependencyNode = dep.toJsonNode();
+                    if (dependencyNode != null)
+                        dependenciesNode.set(field, dependencyNode);
+                }
             );
         }
         handleNode(node);
         return node;
     }
 
-    private List<String> getRequiredProperties() {
+    public List<JsonSchemaProperty> getProperties() {
+        return properties;
+    }
+
+    public List<String> getRequiredProperties() {
         return properties.stream()
             .filter(JsonSchemaProperty::isRequired)
             .map(JsonSchemaProperty::getName)
