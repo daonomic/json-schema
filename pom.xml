@@ -12,6 +12,10 @@
             <id>bintray-maven</id>
             <url>https://api.bintray.com/maven/daonomic/maven/json-schema/;publish=1</url>
         </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>${nexus.url}/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
