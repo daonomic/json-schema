@@ -17,6 +17,7 @@ import io.daonomic.json.schema.visitors.dependencies.Dependency;
 import io.daonomic.json.schema.visitors.dependencies.SchemaDependency;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 
 import static io.daonomic.json.schema.Utils.asSet;
@@ -115,11 +116,11 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         @Override
         public ObjectNode toJsonNode() {
             ObjectNode result = JsonNodeFactory.instance.objectNode();
-            result.set("enum", Utils.toArrayNode(values));
+            result.set("enum", getValue(values));
             return result;
         }
 
-        private ArrayNode getValue(String[] value) {
+        private ArrayNode getValue(Collection<String> value) {
             ArrayNode result = JsonNodeFactory.instance.arrayNode();
             for (String s : value) {
                 try {

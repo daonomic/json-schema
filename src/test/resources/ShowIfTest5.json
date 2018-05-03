@@ -13,7 +13,7 @@
         "required" : [ "show1", "show2" ],
         "properties" : {
           "testValue" : {
-            "enum" : [ "true" ]
+            "enum" : [ true ]
           },
           "show1" : {
             "type" : "string"
@@ -26,7 +26,7 @@
         "type" : "object",
         "properties" : {
           "testValue" : {
-            "enum" : [ "false" ]
+            "enum" : [ false ]
           }
         }
       } ]
