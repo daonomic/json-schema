@@ -22,12 +22,10 @@
           }
         }
       }, {
-        "not" : {
-          "type" : "object",
-          "properties" : {
-            "testValue" : {
-              "enum" : [ "ONE", "THREE" ]
-            }
+        "type" : "object",
+        "properties" : {
+          "testValue" : {
+            "enum" : [ "TWO" ]
           }
         }
       } ]

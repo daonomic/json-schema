@@ -3,19 +3,22 @@
   "required" : [ "testValue" ],
   "properties" : {
     "testValue" : {
-      "type" : "string",
-      "enum" : [ "ONE", "TWO", "THREE" ]
+      "type" : "boolean"
     }
   },
   "dependencies" : {
     "testValue" : {
       "oneOf" : [ {
         "type" : "object",
+        "required" : [ "show1", "show2" ],
         "properties" : {
           "testValue" : {
-            "enum" : [ "ONE" ]
+            "enum" : [ "true" ]
           },
-          "shownIfOne" : {
+          "show1" : {
+            "type" : "string"
+          },
+          "show2" : {
             "type" : "string"
           }
         }
@@ -23,7 +26,7 @@
         "type" : "object",
         "properties" : {
           "testValue" : {
-            "enum" : [ "TWO", "THREE" ]
+            "enum" : [ "false" ]
           }
         }
       } ]

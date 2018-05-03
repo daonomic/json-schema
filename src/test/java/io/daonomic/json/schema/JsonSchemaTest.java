@@ -29,6 +29,7 @@ public class JsonSchemaTest {
             new Object[]{ShowIfTest2.class},
             new Object[]{ShowIfTest3.class},
             new Object[]{ShowIfTest4.class},
+            new Object[]{ShowIfTest5.class},
             new Object[]{OptionalChildTest1.class},
             new Object[]{OptionalChildTest2.class}
         };

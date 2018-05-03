@@ -39,7 +39,7 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
         node.put("type", "object");
         List<String> required = getRequiredProperties();
         if (!required.isEmpty()) {
-            node.set("required", Utils.toArrayNode(JsonNodeFactory.instance, required));
+            node.set("required", Utils.toArrayNode(required));
         }
         ObjectNode propertiesNode = JsonNodeFactory.instance.objectNode();
         node.set("properties", propertiesNode);

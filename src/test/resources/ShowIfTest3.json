@@ -20,12 +20,10 @@
           }
         }
       }, {
-        "not" : {
-          "type" : "object",
-          "properties" : {
-            "testValue" : {
-              "enum" : [ "ONE" ]
-            }
+        "type" : "object",
+        "properties" : {
+          "testValue" : {
+            "enum" : [ "TWO", "THREE" ]
           }
         }
       } ]

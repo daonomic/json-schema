@@ -15,6 +15,10 @@ public class OneOfType implements JsonSchemaType {
         types.add(type);
     }
 
+    public List<JsonSchemaType> getTypes() {
+        return types;
+    }
+
     @Override
     public ObjectNode toJsonNode() {
         ArrayNode array = JsonNodeFactory.instance.arrayNode();

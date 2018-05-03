@@ -29,7 +29,7 @@ public class PrimitiveType implements JsonSchemaType {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", type.name().toLowerCase());
         if (enums != null) {
-            node.set("enum", Utils.toArrayNode(JsonNodeFactory.instance, enums));
+            node.set("enum", Utils.toArrayNode(enums));
         }
         if (format != null) {
             node.put("format", format);

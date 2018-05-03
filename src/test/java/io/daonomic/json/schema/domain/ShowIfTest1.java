@@ -9,7 +9,7 @@ public class ShowIfTest1 {
     @NotNull
     public ShowIfEnum testValue;
     @Title("Should be shown if ONE or THREE selected")
-    @ShowIf(field = "testValue", positive = {"ONE", "THREE"}, required = true)
+    @ShowIf(field = "testValue", positive = {"ONE", "THREE"}, negative = "TWO", required = true)
     public String shownIfOneOrThree;
 
     enum ShowIfEnum {

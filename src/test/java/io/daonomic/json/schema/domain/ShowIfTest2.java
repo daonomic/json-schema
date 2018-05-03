@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 public class ShowIfTest2 {
     @NotNull
     public ShowIfEnum testValue;
-    @ShowIf(field = "testValue", positive = "ONE")
+    @ShowIf(field = "testValue", positive = "ONE", negative = {"TWO", "THREE"})
     public String shownIfOne;
 
     enum ShowIfEnum {

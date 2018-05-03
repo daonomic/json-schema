@@ -1,6 +1,5 @@
 package io.daonomic.json.schema.custom;
 
-import io.daonomic.json.schema.annotations.Order;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandlerClass;
 
 import java.lang.annotation.ElementType;
@@ -14,6 +13,6 @@ import java.lang.annotation.Target;
 public @interface ShowIf {
     String field();
     String[] positive();
-    String[] negative() default {};
+    String[] negative();
     boolean required() default false;
 }
