@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 
-public class ArrayType implements JsonSchemaType {
+public class ArrayType extends HasHandlers<ArrayType> implements JsonSchemaType {
     private JsonSchemaType itemType;
 
     public ArrayType() {
@@ -18,7 +18,9 @@ public class ArrayType implements JsonSchemaType {
     public ObjectNode toJsonNode() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", "array");
-        node.set("items", itemType.toJsonNode());
+        ObjectNode itemsNode = itemType.toJsonNode();
+        handleNode(itemsNode);
+        node.set("items", itemsNode);
         return node;
     }
 }
