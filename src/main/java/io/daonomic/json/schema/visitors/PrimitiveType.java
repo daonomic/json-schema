@@ -37,6 +37,10 @@ public class PrimitiveType implements JsonSchemaType {
         return node;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     void setEnums(List<String> enums) {
         this.enums = enums;
     }

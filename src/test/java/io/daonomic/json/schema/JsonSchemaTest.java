@@ -32,7 +32,8 @@ public class JsonSchemaTest {
             new Object[]{ShowIfTest5.class},
             new Object[]{OptionalChildTest1.class},
             new Object[]{OptionalChildTest2.class},
-            new Object[]{ArrayTest.class}
+            new Object[]{ArrayTest.class},
+            new Object[]{EmailTest.class}
         };
     }
 

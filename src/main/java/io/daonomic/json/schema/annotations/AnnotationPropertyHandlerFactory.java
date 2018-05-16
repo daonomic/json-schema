@@ -5,8 +5,10 @@ import io.daonomic.json.schema.InstanceCache;
 import io.daonomic.json.schema.MultiplePropertyHandler;
 import io.daonomic.json.schema.PropertyHandler;
 import io.daonomic.json.schema.PropertyHandlerFactory;
+import io.daonomic.json.schema.handlers.EmailPropertyAnnotationHandler;
 import io.daonomic.json.schema.handlers.RequiredPropertyAnnotationHandler;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,7 @@ public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory 
         defaultAnnotationHandlers.put(NotNull.class, RequiredPropertyAnnotationHandler.class);
         defaultAnnotationHandlers.put(NotBlank.class, RequiredPropertyAnnotationHandler.class);
         defaultAnnotationHandlers.put(NotEmpty.class, RequiredPropertyAnnotationHandler.class);
+        defaultAnnotationHandlers.put(Email.class, EmailPropertyAnnotationHandler.class);
     }
 
     @SuppressWarnings("unchecked")

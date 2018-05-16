@@ -1,0 +1,9 @@
+{
+  "type" : "object",
+  "properties" : {
+    "testEmail" : {
+      "type" : "string",
+      "format" : "email"
+    }
+  }
+}
