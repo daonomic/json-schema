@@ -37,6 +37,12 @@ public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory 
                 list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation), getOrder(handlerClass)));
             }
         }
+        for (Annotation annotation : beanProperty.getType().getRawClass().getAnnotations()) {
+            Class<? extends PropertyAnnotationHandler> handlerClass = getByAnnotation(annotation);
+            if (handlerClass != null) {
+                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation), getOrder(handlerClass)));
+            }
+        }
         return new MultiplePropertyHandler(list.stream().sorted(Comparator.comparingInt(e2 -> e2.order)).map(e -> e.handler).collect(Collectors.toList()));
     }
 

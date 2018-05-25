@@ -7,9 +7,9 @@ import io.daonomic.json.schema.visitors.dependencies.FieldDependency;
 
 import java.util.List;
 
-public class OptionalAnnotationHandler implements PropertyAnnotationHandler<Optional> {
+public class IgnoreEmptyAnnotationHandler implements PropertyAnnotationHandler<IgnoreEmpty> {
     @Override
-    public JsonSchemaProperty handle(JsonSchemaProperty property, Optional annotation) {
+    public JsonSchemaProperty handle(JsonSchemaProperty property, IgnoreEmpty annotation) {
         if (property.getType() instanceof ObjectType) {
             ObjectType type = (ObjectType) property.getType();
 

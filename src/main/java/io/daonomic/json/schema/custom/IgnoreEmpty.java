@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-@PropertyAnnotationHandlerClass(OptionalAnnotationHandler.class)
-public @interface Optional {
+@Target({ElementType.TYPE})
+@PropertyAnnotationHandlerClass(IgnoreEmptyAnnotationHandler.class)
+public @interface IgnoreEmpty {
 }
