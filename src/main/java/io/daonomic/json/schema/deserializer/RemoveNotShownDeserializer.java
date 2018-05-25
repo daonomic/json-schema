@@ -80,7 +80,7 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
         Object result = super.deserialize(p, ctxt);
         for (ShowIfInfo property : properties) {
             if (!property.values.contains(property.dependsOn.getAccessor().getValue(result))) {
-                property.dependant.getAccessor().setValue(result, null);
+                property.dependant.getMutator().setValue(result, null);
             }
         }
         return result;
