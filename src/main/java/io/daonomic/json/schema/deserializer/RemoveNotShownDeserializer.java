@@ -31,10 +31,12 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
         Map<String, BeanPropertyDefinition> map = beanDescription.findProperties().stream().collect(toMap(BeanPropertyDefinition::getName, e -> e));
         List<ShowIfInfo> properties = new ArrayList<>();
         map.forEach((name, def) -> {
-            ShowIf ann = def.getAccessor().getAnnotation(ShowIf.class);
-            if (ann != null) {
-                BeanPropertyDefinition dependsOn = map.get(ann.field());
-                properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
+            if (def.getAccessor() != null) {
+                ShowIf ann = def.getAccessor().getAnnotation(ShowIf.class);
+                if (ann != null) {
+                    BeanPropertyDefinition dependsOn = map.get(ann.field());
+                    properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
+                }
             }
         });
         if (properties.isEmpty()) {
