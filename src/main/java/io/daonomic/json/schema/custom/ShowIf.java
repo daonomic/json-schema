@@ -12,7 +12,6 @@ import java.lang.annotation.Target;
 @PropertyAnnotationHandlerClass(ShowIfAnnotationHandler.class)
 public @interface ShowIf {
     String field();
-    String[] positive();
-    String[] negative();
+    String[] value();
     boolean required() default false;
 }

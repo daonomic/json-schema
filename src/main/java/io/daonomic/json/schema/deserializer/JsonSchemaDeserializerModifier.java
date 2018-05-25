@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import io.daonomic.json.schema.custom.IgnoreEmpty;
 
-public class IgnoreEmptyDeserializerModifier extends BeanDeserializerModifier {
+public class JsonSchemaDeserializerModifier extends BeanDeserializerModifier {
     @Override
     public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
-        IgnoreEmpty ann = beanDesc.getBeanClass().getAnnotation(IgnoreEmpty.class);
-        if (ann != null) {
+        deserializer = RemoveNotShownDeserializer.create(beanDesc, deserializer);
+        if (beanDesc.getClassAnnotations().has(IgnoreEmpty.class)) {
             return new IgnoreEmptyDeserializer(deserializer);
         } else {
             return super.modifyDeserializer(config, beanDesc, deserializer);

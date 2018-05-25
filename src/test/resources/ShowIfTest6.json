@@ -1,0 +1,41 @@
+{
+  "type" : "object",
+  "required" : [ "testValue" ],
+  "properties" : {
+    "testValue" : {
+      "type" : "boolean"
+    }
+  },
+  "dependencies" : {
+    "testValue" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "required" : [ "child" ],
+        "properties" : {
+          "testValue" : {
+            "enum" : [ true ]
+          },
+          "child" : {
+            "type" : "object",
+            "required" : [ "field1", "field2" ],
+            "properties" : {
+              "field1" : {
+                "type" : "string"
+              },
+              "field2" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }, {
+        "type" : "object",
+        "properties" : {
+          "testValue" : {
+            "enum" : [ false ]
+          }
+        }
+      } ]
+    }
+  }
+}

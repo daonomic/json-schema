@@ -20,6 +20,7 @@ public class JsonSchemaTest {
     @DataProvider
     public static Object[][] data1() {
         return new Object[][]{
+            new Object[]{SimpleChildTest.class},
             new Object[]{Parent.class},
             new Object[]{RequiredAnnotationTest.class},
             new Object[]{TitleTest.class},
@@ -30,8 +31,10 @@ public class JsonSchemaTest {
             new Object[]{ShowIfTest3.class},
             new Object[]{ShowIfTest4.class},
             new Object[]{ShowIfTest5.class},
+            new Object[]{ShowIfTest6.class},
             new Object[]{OptionalChildTest1.class},
             new Object[]{OptionalChildTest2.class},
+            new Object[]{OptionalChildTest3.class},
             new Object[]{ArrayTest.class},
             new Object[]{EmailTest.class}
         };

@@ -1,0 +1,21 @@
+{
+  "type" : "object",
+  "required" : [ "child" ],
+  "properties" : {
+    "field1" : {
+      "type" : "string"
+    },
+    "child" : {
+      "type" : "object",
+      "required" : [ "field1" ],
+      "properties" : {
+        "field1" : {
+          "type" : "string"
+        },
+        "field2" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

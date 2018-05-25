@@ -7,22 +7,25 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
-import io.daonomic.json.schema.Utils;
 import io.daonomic.json.schema.annotations.Order;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandler;
 import io.daonomic.json.schema.visitors.JsonSchemaProperty;
 import io.daonomic.json.schema.visitors.ObjectType;
 import io.daonomic.json.schema.visitors.OneOfType;
+import io.daonomic.json.schema.visitors.PrimitiveType;
 import io.daonomic.json.schema.visitors.dependencies.Dependency;
 import io.daonomic.json.schema.visitors.dependencies.SchemaDependency;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static io.daonomic.json.schema.Utils.asSet;
+import static java.util.Arrays.asList;
 
-@Order(Integer.MAX_VALUE)
+@Order(Integer.MAX_VALUE - 1000000)
 public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -34,11 +37,11 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     public JsonSchemaProperty handle(ObjectType objectType, JsonSchemaProperty property, ShowIf annotation) {
         objectType.addDependency(annotation.field(), existing -> {
             if (existing == null) {
-                return changeDependency(new OneOfType(), property, annotation);
+                return changeDependency(objectType, new OneOfType(), property, annotation);
             } else if (existing instanceof SchemaDependency) {
                 JsonSchemaType schemaType = ((SchemaDependency) existing).getSchemaType();
                 if (schemaType instanceof OneOfType) {
-                    return changeDependency((OneOfType) schemaType, property, annotation);
+                    return changeDependency(objectType, (OneOfType) schemaType, property, annotation);
                 } else {
                     throw new IllegalStateException("Only oneOf dependency is allowed");
                 }
@@ -49,8 +52,8 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         return null;
     }
 
-    private Dependency changeDependency(OneOfType oneOfType, JsonSchemaProperty property, ShowIf annotation) {
-        ObjectType positive = findEnumWithValues(oneOfType, annotation.field(), asSet(annotation.positive()));
+    private Dependency changeDependency(ObjectType objectType, OneOfType oneOfType, JsonSchemaProperty property, ShowIf annotation) {
+        ObjectType positive = findEnumWithValues(oneOfType, annotation.field(), asSet(annotation.value()));
         if (positive == null) {
             oneOfType.addType(createPositive(property, annotation));
         } else {
@@ -60,11 +63,41 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
                 positive.addProperty(property);
             }
         }
-        ObjectType negative = findEnumWithValues(oneOfType, annotation.field(), asSet(annotation.negative()));
+        Set<String> negativeValues = getNegativeValues(objectType, annotation);
+        ObjectType negative = findEnumWithValues(oneOfType, annotation.field(), negativeValues);
         if (negative == null) {
-            oneOfType.addType(createNegative(annotation));
+            oneOfType.addType(createNegative(annotation.field(), negativeValues));
         }
         return new SchemaDependency(oneOfType);
+    }
+
+    private Set<String> getNegativeValues(ObjectType objectType, ShowIf annotation) {
+        Optional<JsonSchemaProperty> dependsOnOpt = objectType.getProperties().stream().filter(p -> p.getName().equals(annotation.field())).findAny();
+        if (!dependsOnOpt.isPresent()) {
+            throw new IllegalStateException("Schema doesn't contain " + annotation.field() + " property");
+        }
+        JsonSchemaProperty dependsOn = dependsOnOpt.get();
+        final Set<String> enums;
+        if (dependsOn.getType() instanceof PrimitiveType) {
+            switch (((PrimitiveType) dependsOn.getType()).getType()) {
+                case BOOLEAN:
+                    enums = asSet("true", "false");
+                    break;
+                case STRING:
+                    if (((PrimitiveType) dependsOn.getType()).getEnums() != null) {
+                        enums = new HashSet<>(((PrimitiveType) dependsOn.getType()).getEnums());
+                    } else {
+                        throw new IllegalArgumentException("Only bool and enum properties supported");
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Only bool and enum properties supported");
+            }
+        } else {
+            throw new IllegalArgumentException("Only primitive types supported");
+        }
+        enums.removeAll(asList(annotation.value()));
+        return enums;
     }
 
     private ObjectType findEnumWithValues(OneOfType type, String fieldName, Set<String> enums) {
@@ -82,7 +115,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
 
     private ObjectType createPositive(JsonSchemaProperty property, ShowIf annotation) {
         ObjectType result = new ObjectType();
-        result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(asSet(annotation.positive())), false));
+        result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(asSet(annotation.value())), false));
         if (annotation.required()) {
             result.addProperty(property.required(true));
         } else {
@@ -91,9 +124,9 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         return result;
     }
 
-    private JsonSchemaType createNegative(ShowIf annotation) {
+    private JsonSchemaType createNegative(String dependsOn, Set<String> negative) {
         ObjectType result = new ObjectType();
-        result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(asSet(annotation.negative())), false));
+        result.addProperty(new JsonSchemaProperty(dependsOn, new EnumSchemaType(negative), false));
         return result;
     }
 
