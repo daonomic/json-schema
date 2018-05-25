@@ -15,7 +15,7 @@ public abstract class PreprocessDeserializer extends DelegatingDeserializer {
 
     @Override
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        JsonParser newParser = preprocess(p.readValueAsTree()).traverse();
+        JsonParser newParser = preprocess(p.readValueAsTree()).traverse(p.getCodec());
         newParser.nextToken();
         return _delegatee.deserialize(newParser,  ctxt);
     }
