@@ -32,12 +32,10 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
         Map<String, BeanPropertyDefinition> map = beanDescription.findProperties().stream().collect(toMap(BeanPropertyDefinition::getName, e -> e));
         List<ShowIfInfo> properties = new ArrayList<>();
         map.forEach((name, def) -> {
-            if (def.getAccessor() != null) {
-                ShowIf ann = getAnnotation(def, ShowIf.class);
-                if (ann != null) {
-                    BeanPropertyDefinition dependsOn = map.get(ann.field());
-                    properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
-                }
+            ShowIf ann = getAnnotation(def, ShowIf.class);
+            if (ann != null) {
+                BeanPropertyDefinition dependsOn = map.get(ann.field());
+                properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
             }
         });
         if (properties.isEmpty()) {
@@ -48,11 +46,11 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
     }
 
     private static <A extends Annotation> A getAnnotation(BeanPropertyDefinition def, Class<A> aClass) {
-        A fieldAnnotation = def.getField().getAnnotation(aClass);
+        A fieldAnnotation = def.getField() != null ? def.getField().getAnnotation(aClass) : null;
         if (fieldAnnotation != null) {
             return fieldAnnotation;
         } else {
-            return def.getAccessor().getAnnotation(aClass);
+            return def.getAccessor() != null ? def.getAccessor().getAnnotation(aClass) : null;
         }
     }
 
