@@ -45,6 +45,7 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static <A extends Annotation> A getAnnotation(BeanPropertyDefinition def, Class<A> aClass) {
         A fieldAnnotation = def.getField() != null ? def.getField().getAnnotation(aClass) : null;
         if (fieldAnnotation != null) {
