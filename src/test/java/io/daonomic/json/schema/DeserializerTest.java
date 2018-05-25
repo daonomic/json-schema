@@ -28,6 +28,13 @@ public class DeserializerTest {
     }
 
     @Test
+    public void keepIfNotEmpty() throws IOException {
+        OptionalChildTest1 object = objectMapper.readValue("{\"field1\": \"value\", \"child\": {\"field1\": \"value\"}}", OptionalChildTest1.class);
+        assertEquals(object.field1, "value");
+        assertEquals(object.child.field1, "value");
+    }
+
+    @Test
     public void removeIfNotShown1() throws IOException {
         assertFalse(objectMapper.readValue("{\"testValue\": \"false\", \"show1\": \"value\"}", ShowIfTest5.class).testValue);
         assertNull(objectMapper.readValue("{\"testValue\": \"false\", \"show1\": \"value\"}", ShowIfTest5.class).show1);

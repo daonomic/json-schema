@@ -20,7 +20,9 @@ public class IgnoreEmptyDeserializer extends DelegatingDeserializer {
         if (treeNode instanceof ObjectNode && ((ObjectNode) treeNode).isEmpty(null)) {
             return null;
         }
-        return _delegatee.deserialize(p,  ctxt);
+        JsonParser newParser = treeNode.traverse();
+        newParser.nextToken();
+        return _delegatee.deserialize(newParser,  ctxt);
     }
 
     @Override

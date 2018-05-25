@@ -13,7 +13,7 @@ public class JsonSchemaDeserializerModifier extends BeanDeserializerModifier {
         if (beanDesc.getClassAnnotations().has(IgnoreEmpty.class)) {
             return new IgnoreEmptyDeserializer(deserializer);
         } else {
-            return super.modifyDeserializer(config, beanDesc, deserializer);
+            return deserializer;
         }
     }
 }
