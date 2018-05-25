@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 import io.daonomic.json.schema.custom.ShowIf;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
         List<ShowIfInfo> properties = new ArrayList<>();
         map.forEach((name, def) -> {
             if (def.getAccessor() != null) {
-                ShowIf ann = def.getAccessor().getAnnotation(ShowIf.class);
+                ShowIf ann = getAnnotation(def, ShowIf.class);
                 if (ann != null) {
                     BeanPropertyDefinition dependsOn = map.get(ann.field());
                     properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
@@ -43,6 +44,15 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
             return d;
         } else {
             return new RemoveNotShownDeserializer(d, properties);
+        }
+    }
+
+    private static <A extends Annotation> A getAnnotation(BeanPropertyDefinition def, Class<A> aClass) {
+        A fieldAnnotation = def.getField().getAnnotation(aClass);
+        if (fieldAnnotation != null) {
+            return fieldAnnotation;
+        } else {
+            return def.getAccessor().getAnnotation(aClass);
         }
     }
 
