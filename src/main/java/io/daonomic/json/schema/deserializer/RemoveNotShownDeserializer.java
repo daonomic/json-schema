@@ -1,15 +1,14 @@
 package io.daonomic.json.schema.deserializer;
 
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.deser.std.DelegatingDeserializer;
 import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.SimpleType;
 import io.daonomic.json.schema.custom.ShowIf;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
-public class RemoveNotShownDeserializer extends DelegatingDeserializer {
+public class RemoveNotShownDeserializer extends PreprocessDeserializer {
     private final List<ShowIfInfo> properties;
 
     private RemoveNotShownDeserializer(JsonDeserializer<?> d, List<ShowIfInfo> properties) {
@@ -35,7 +34,7 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
             ShowIf ann = getAnnotation(def, ShowIf.class);
             if (ann != null) {
                 BeanPropertyDefinition dependsOn = map.get(ann.field());
-                properties.add(new ShowIfInfo(def, dependsOn, getPositiveValues(dependsOn, ann.value())));
+                properties.add(new ShowIfInfo(def.getName(), dependsOn.getName(), getPositiveValues(dependsOn, ann.value())));
             }
         });
         if (properties.isEmpty()) {
@@ -57,17 +56,12 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
 
     private static Set<Object> getPositiveValues(BeanPropertyDefinition dependsOn, String[] values) {
         if (dependsOn.getPrimaryType() instanceof SimpleType && dependsOn.getPrimaryType().getRawClass() == boolean.class) {
-            return Stream.of(values).map(Boolean::valueOf).collect(Collectors.toSet());
+            return Stream.of(values).map(Boolean::valueOf).map(JsonNodeFactory.instance::booleanNode).collect(Collectors.toSet());
         } else if (dependsOn.getPrimaryType() instanceof SimpleType && dependsOn.getPrimaryType().getRawClass().isEnum()) {
-            return Stream.of(values).map(value -> toEnum(value, dependsOn.getPrimaryType().getRawClass())).collect(Collectors.toSet());
+            return Stream.of(values).map(JsonNodeFactory.instance::textNode).collect(Collectors.toSet());
         } else {
             throw new IllegalStateException("Only boolean and enums supported, not " + dependsOn.getPrimaryType().getRawClass());
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Enum toEnum(String value, Class<?> enumClass) {
-        return Enum.valueOf((Class<Enum>)enumClass, value);
     }
 
     @Override
@@ -76,22 +70,24 @@ public class RemoveNotShownDeserializer extends DelegatingDeserializer {
     }
 
     @Override
-    public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        Object result = super.deserialize(p, ctxt);
-        for (ShowIfInfo property : properties) {
-            if (!property.values.contains(property.dependsOn.getAccessor().getValue(result))) {
-                property.dependant.getMutator().setValue(result, null);
+    protected TreeNode preprocess(TreeNode node) {
+        if (node instanceof ObjectNode) {
+            ObjectNode object = (ObjectNode) node;
+            for (ShowIfInfo property : properties) {
+                if (!property.values.contains(object.get(property.dependsOn))) {
+                    object.remove(property.dependant);
+                }
             }
         }
-        return result;
+        return node;
     }
 
     private static class ShowIfInfo {
-        private final BeanPropertyDefinition dependant;
-        private final BeanPropertyDefinition dependsOn;
+        private final String dependant;
+        private final String dependsOn;
         private final Set<Object> values;
 
-        public ShowIfInfo(BeanPropertyDefinition dependant, BeanPropertyDefinition dependsOn, Set<Object> values) {
+        ShowIfInfo(String dependant, String dependsOn, Set<Object> values) {
             this.dependant = dependant;
             this.dependsOn = dependsOn;
             this.values = values;

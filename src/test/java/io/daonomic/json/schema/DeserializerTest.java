@@ -36,11 +36,11 @@ public class DeserializerTest {
 
     @Test
     public void removeIfNotShown1() throws IOException {
-        assertFalse(objectMapper.readValue("{\"testValue\": \"false\", \"show1\": \"value\"}", ShowIfTest5.class).testValue);
-        assertNull(objectMapper.readValue("{\"testValue\": \"false\", \"show1\": \"value\"}", ShowIfTest5.class).show1);
-        assertNull(objectMapper.readValue("{\"testValue\": \"false\", \"show2\": \"value\"}", ShowIfTest5.class).show2);
-        assertEquals(objectMapper.readValue("{\"testValue\": \"true\", \"show2\": \"value\"}", ShowIfTest5.class).show2, "value");
-        assertTrue(objectMapper.readValue("{\"testValue\": \"true\", \"show2\": \"value\"}", ShowIfTest5.class).testValue);
+        assertFalse(objectMapper.readValue("{\"testValue\": false, \"show1\": \"value\"}", ShowIfTest5.class).testValue);
+        assertNull(objectMapper.readValue("{\"testValue\": false, \"show1\": \"value\"}", ShowIfTest5.class).show1);
+        assertNull(objectMapper.readValue("{\"testValue\": false, \"show2\": \"value\"}", ShowIfTest5.class).show2);
+        assertEquals(objectMapper.readValue("{\"testValue\": true, \"show2\": \"value\"}", ShowIfTest5.class).show2, "value");
+        assertTrue(objectMapper.readValue("{\"testValue\": true, \"show2\": \"value\"}", ShowIfTest5.class).testValue);
     }
 
     @Test
