@@ -43,4 +43,8 @@ public class JsonSchemaProperty extends HasHandlers<JsonSchemaProperty> {
         this.required = required;
         return this;
     }
+
+    public JsonSchemaProperty copy() {
+        return new JsonSchemaProperty(name, type.copy(), required);
+    }
 }

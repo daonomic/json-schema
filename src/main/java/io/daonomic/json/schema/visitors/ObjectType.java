@@ -33,6 +33,17 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
         }
     }
 
+    public ObjectType copy() {
+        ObjectType copy = new ObjectType();
+        for (JsonSchemaProperty property : properties) {
+            copy.addProperty(property.copy());
+        }
+        for (Map.Entry<String, Dependency> entry : dependencies.entrySet()) {
+            copy.dependencies.put(entry.getKey(), entry.getValue().copy());
+        }
+        return copy;
+    }
+
     @Override
     public ObjectNode toJsonSchema() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();

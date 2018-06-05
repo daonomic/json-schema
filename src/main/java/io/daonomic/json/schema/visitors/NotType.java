@@ -4,11 +4,16 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 
-public class NotType implements JsonSchemaType {
+public class NotType implements JsonSchemaType<NotType> {
     private final JsonSchemaType type;
 
     public NotType(JsonSchemaType type) {
         this.type = type;
+    }
+
+    @Override
+    public NotType copy() {
+        return new NotType(type.copy());
     }
 
     @Override

@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FieldDependency implements Dependency {
+public class FieldDependency implements Dependency<FieldDependency> {
     private List<String> fields;
 
     public FieldDependency(List<String> fields) {
@@ -15,6 +16,11 @@ public class FieldDependency implements Dependency {
 
     public void addField(String field) {
         fields.add(field);
+    }
+
+    @Override
+    public FieldDependency copy() {
+        return new FieldDependency(new ArrayList<>(fields));
     }
 
     @Override

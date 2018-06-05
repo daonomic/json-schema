@@ -5,9 +5,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 import io.daonomic.json.schema.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class PrimitiveType implements JsonSchemaType {
+public class PrimitiveType implements JsonSchemaType<PrimitiveType> {
     private final Type type;
     private List<String> enums;
     private String format;
@@ -22,6 +23,14 @@ public class PrimitiveType implements JsonSchemaType {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    @Override
+    public PrimitiveType copy() {
+        PrimitiveType copy = new PrimitiveType(type);
+        copy.setEnums(new ArrayList<>(enums));
+        copy.setFormat(format);
+        return copy;
     }
 
     @Override

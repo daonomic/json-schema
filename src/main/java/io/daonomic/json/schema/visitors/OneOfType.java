@@ -8,7 +8,7 @@ import io.daonomic.json.schema.JsonSchemaType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OneOfType implements JsonSchemaType {
+public class OneOfType implements JsonSchemaType<OneOfType> {
     private final List<JsonSchemaType> types = new ArrayList<>();
 
     public void addType(JsonSchemaType type) {
@@ -17,6 +17,15 @@ public class OneOfType implements JsonSchemaType {
 
     public List<JsonSchemaType> getTypes() {
         return types;
+    }
+
+    @Override
+    public OneOfType copy() {
+        OneOfType copy = new OneOfType();
+        for (JsonSchemaType type : types) {
+            copy.addType(type.copy());
+        }
+        return copy;
     }
 
     @Override

@@ -3,7 +3,7 @@ package io.daonomic.json.schema.visitors.dependencies;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.daonomic.json.schema.JsonSchemaType;
 
-public class SchemaDependency implements Dependency {
+public class SchemaDependency implements Dependency<SchemaDependency> {
     private JsonSchemaType schemaType;
 
     public SchemaDependency(JsonSchemaType schemaType) {
@@ -16,6 +16,11 @@ public class SchemaDependency implements Dependency {
 
     public void setSchemaType(JsonSchemaType schemaType) {
         this.schemaType = schemaType;
+    }
+
+    @Override
+    public SchemaDependency copy() {
+        return new SchemaDependency(schemaType.copy());
     }
 
     @Override
