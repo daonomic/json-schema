@@ -9,10 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.json.schema.JsonSchemaType;
 import io.daonomic.json.schema.annotations.Order;
 import io.daonomic.json.schema.annotations.PropertyAnnotationHandler;
-import io.daonomic.json.schema.visitors.JsonSchemaProperty;
-import io.daonomic.json.schema.visitors.ObjectType;
-import io.daonomic.json.schema.visitors.OneOfType;
-import io.daonomic.json.schema.visitors.PrimitiveType;
+import io.daonomic.json.schema.visitors.*;
 import io.daonomic.json.schema.visitors.dependencies.Dependency;
 import io.daonomic.json.schema.visitors.dependencies.SchemaDependency;
 
@@ -64,9 +61,13 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
             }
         }
         Set<String> negativeValues = getNegativeValues(objectType, annotation);
-        ObjectType negative = findEnumWithValues(oneOfType, annotation.field(), negativeValues);
-        if (negative == null) {
-            oneOfType.addType(createNegative(annotation.field(), negativeValues));
+        if (negativeValues.isEmpty()) {
+            oneOfType.addType(createNotPositive(annotation.field(), asSet(annotation.value())));
+        } else {
+            ObjectType negative = findEnumWithValues(oneOfType, annotation.field(), negativeValues);
+            if (negative == null) {
+                oneOfType.addType(createNegative(annotation.field(), negativeValues));
+            }
         }
         return new SchemaDependency(oneOfType);
     }
@@ -87,11 +88,11 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
                     if (((PrimitiveType) dependsOn.getType()).getEnums() != null) {
                         enums = new HashSet<>(((PrimitiveType) dependsOn.getType()).getEnums());
                     } else {
-                        throw new IllegalArgumentException("Only bool and enum properties supported");
+                        enums = new HashSet<>();
                     }
                     break;
                 default:
-                    throw new IllegalArgumentException("Only bool and enum properties supported");
+                    enums = new HashSet<>();
             }
         } else {
             throw new IllegalArgumentException("Only primitive types supported");
@@ -124,9 +125,15 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         return result;
     }
 
-    private JsonSchemaType createNegative(String dependsOn, Set<String> negative) {
+    private ObjectType createNegative(String dependsOn, Set<String> negative) {
         ObjectType result = new ObjectType();
         result.addProperty(new JsonSchemaProperty(dependsOn, new EnumSchemaType(negative), false));
+        return result;
+    }
+
+    private JsonSchemaType createNotPositive(String dependsOn, Set<String> positive) {
+        ObjectType result = new ObjectType();
+        result.addProperty(new JsonSchemaProperty(dependsOn, new NotType(new EnumSchemaType(positive)), false));
         return result;
     }
 
