@@ -44,10 +44,22 @@ public class JsonSchemaTest {
     public void test1(Class testClass) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode());
+        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
+        }
+    }
+
+    @Test
+    public void testUiSchema() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        JsonSchemaType schema = JsonFormatVisitor.inspect(objectMapper.constructType(UiSchemaTest.class), objectMapper, new AnnotationPropertyHandlerFactory());
+        String uiSchema = objectMapper.writeValueAsString(schema.toUiSchema());
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchema.json")) {
+            assertNotNull(in, "not found resource. schema=" + uiSchema);
+            assertEquals(uiSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
         }
     }
 
@@ -63,7 +75,7 @@ public class JsonSchemaTest {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonNode());
+        String jsonSchema = objectMapper.writeValueAsString(JsonFormatVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));

@@ -15,12 +15,17 @@ public class ArrayType extends HasHandlers<ArrayType> implements JsonSchemaType 
     }
 
     @Override
-    public ObjectNode toJsonNode() {
+    public ObjectNode toJsonSchema() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", "array");
-        ObjectNode itemsNode = itemType.toJsonNode();
+        ObjectNode itemsNode = itemType.toJsonSchema();
         handleNode(itemsNode);
         node.set("items", itemsNode);
         return node;
+    }
+
+    @Override
+    public ObjectNode toUiSchema() {
+        return null;
     }
 }

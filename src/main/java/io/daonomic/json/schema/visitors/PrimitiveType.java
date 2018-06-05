@@ -25,7 +25,7 @@ public class PrimitiveType implements JsonSchemaType {
     }
 
     @Override
-    public ObjectNode toJsonNode() {
+    public ObjectNode toJsonSchema() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", type.name().toLowerCase());
         if (enums != null) {
@@ -35,6 +35,11 @@ public class PrimitiveType implements JsonSchemaType {
             node.put("format", format);
         }
         return node;
+    }
+
+    @Override
+    public ObjectNode toUiSchema() {
+        return null;
     }
 
     public Type getType() {

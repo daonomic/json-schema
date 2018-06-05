@@ -3,5 +3,6 @@ package io.daonomic.json.schema;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface JsonSchemaType {
-    ObjectNode toJsonNode();
+    ObjectNode toJsonSchema();
+    ObjectNode toUiSchema();
 }

@@ -20,13 +20,18 @@ public class OneOfType implements JsonSchemaType {
     }
 
     @Override
-    public ObjectNode toJsonNode() {
+    public ObjectNode toJsonSchema() {
         ArrayNode array = JsonNodeFactory.instance.arrayNode();
         for (JsonSchemaType type : types) {
-            array.add(type.toJsonNode());
+            array.add(type.toJsonSchema());
         }
         ObjectNode result = JsonNodeFactory.instance.objectNode();
         result.set("oneOf", array);
         return result;
+    }
+
+    @Override
+    public ObjectNode toUiSchema() {
+        return null;
     }
 }

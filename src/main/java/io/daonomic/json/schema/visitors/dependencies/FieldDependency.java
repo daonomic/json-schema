@@ -18,7 +18,7 @@ public class FieldDependency implements Dependency {
     }
 
     @Override
-    public JsonNode toJsonNode() {
+    public JsonNode toJsonSchema() {
         if (fields.isEmpty()) {
             return null;
         } else {

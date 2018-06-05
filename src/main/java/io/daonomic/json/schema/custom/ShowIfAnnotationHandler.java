@@ -147,10 +147,15 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         }
 
         @Override
-        public ObjectNode toJsonNode() {
+        public ObjectNode toJsonSchema() {
             ObjectNode result = JsonNodeFactory.instance.objectNode();
             result.set("enum", getValue(values));
             return result;
+        }
+
+        @Override
+        public ObjectNode toUiSchema() {
+            return null;
         }
 
         private ArrayNode getValue(Collection<String> value) {

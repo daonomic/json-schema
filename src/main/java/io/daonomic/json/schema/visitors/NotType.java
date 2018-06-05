@@ -12,9 +12,14 @@ public class NotType implements JsonSchemaType {
     }
 
     @Override
-    public ObjectNode toJsonNode() {
+    public ObjectNode toJsonSchema() {
         ObjectNode result = JsonNodeFactory.instance.objectNode();
-        result.set("not", type.toJsonNode());
+        result.set("not", type.toJsonSchema());
         return result;
+    }
+
+    @Override
+    public ObjectNode toUiSchema() {
+        return null;
     }
 }

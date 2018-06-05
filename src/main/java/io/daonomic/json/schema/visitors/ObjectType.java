@@ -34,7 +34,7 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
     }
 
     @Override
-    public ObjectNode toJsonNode() {
+    public ObjectNode toJsonSchema() {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", "object");
         List<String> required = getRequiredProperties();
@@ -50,7 +50,7 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
             ObjectNode dependenciesNode = JsonNodeFactory.instance.objectNode();
             node.set("dependencies", dependenciesNode);
             dependencies.forEach((field, dep) -> {
-                    JsonNode dependencyNode = dep.toJsonNode();
+                    JsonNode dependencyNode = dep.toJsonSchema();
                     if (dependencyNode != null)
                         dependenciesNode.set(field, dependencyNode);
                 }
@@ -58,6 +58,15 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
         }
         handleNode(node);
         return node;
+    }
+
+    @Override
+    public ObjectNode toUiSchema() {
+        ObjectNode result = JsonNodeFactory.instance.objectNode();
+        for (JsonSchemaProperty property : properties) {
+            result.put(property.getName(), property.getUiSchema());
+        }
+        return result;
     }
 
     public List<JsonSchemaProperty> getProperties() {
