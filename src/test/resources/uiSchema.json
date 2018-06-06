@@ -4,5 +4,13 @@
     "ui:options" : {
       "url" : "test"
     }
+  },
+  "child" : {
+    "value" : {
+      "ui:widget" : "external-select",
+      "ui:options" : {
+        "url" : "childTest"
+      }
+    }
   }
 }

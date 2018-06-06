@@ -53,18 +53,6 @@ public class JsonSchemaTest {
         }
     }
 
-    @Test
-    public void testUiSchema() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        JsonSchemaType schema = JsonFormatVisitor.inspect(objectMapper.constructType(UiSchemaTest.class), objectMapper, new AnnotationPropertyHandlerFactory());
-        String uiSchema = objectMapper.writeValueAsString(schema.toUiSchema());
-        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchema.json")) {
-            assertNotNull(in, "not found resource. schema=" + uiSchema);
-            assertEquals(uiSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
-        }
-    }
-
     @DataProvider
     public static Object[][] data2() {
         return new Object[][]{

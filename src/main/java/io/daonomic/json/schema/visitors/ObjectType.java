@@ -75,7 +75,15 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
     public ObjectNode toUiSchema() {
         ObjectNode result = JsonNodeFactory.instance.objectNode();
         for (JsonSchemaProperty property : properties) {
-            result.put(property.getName(), property.getUiSchema());
+            ObjectNode typeSchema = property.getType().toUiSchema();
+            if (typeSchema != null) {
+                ObjectNode propertyNode = JsonNodeFactory.instance.objectNode();
+                propertyNode.setAll(typeSchema);
+                propertyNode.setAll(property.getUiSchema());
+                result.set(property.getName(), propertyNode);
+            } else if (!property.getUiSchema().isEmpty(null)) {
+                result.set(property.getName(), property.getUiSchema());
+            }
         }
         return result;
     }
