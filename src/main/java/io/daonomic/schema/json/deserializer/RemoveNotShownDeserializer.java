@@ -10,10 +10,7 @@ import com.fasterxml.jackson.databind.type.SimpleType;
 import io.daonomic.schema.json.custom.ShowIf;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,10 +54,8 @@ public class RemoveNotShownDeserializer extends PreprocessDeserializer {
     private static Set<Object> getPositiveValues(BeanPropertyDefinition dependsOn, String[] values) {
         if (dependsOn.getPrimaryType() instanceof SimpleType && dependsOn.getPrimaryType().getRawClass() == boolean.class) {
             return Stream.of(values).map(Boolean::valueOf).map(JsonNodeFactory.instance::booleanNode).collect(Collectors.toSet());
-        } else if (dependsOn.getPrimaryType() instanceof SimpleType && dependsOn.getPrimaryType().getRawClass().isEnum()) {
-            return Stream.of(values).map(JsonNodeFactory.instance::textNode).collect(Collectors.toSet());
         } else {
-            throw new IllegalStateException("Only boolean and enums supported, not " + dependsOn.getPrimaryType().getRawClass());
+            return Stream.of(values).map(JsonNodeFactory.instance::textNode).collect(Collectors.toSet());
         }
     }
 
