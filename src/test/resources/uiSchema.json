@@ -20,5 +20,12 @@
         "url" : "childTest"
       }
     }
+  },
+  "children" : {
+    "items" : {
+      "value" : {
+        "ui:widget" : "ui:hidden"
+      }
+    }
   }
 }

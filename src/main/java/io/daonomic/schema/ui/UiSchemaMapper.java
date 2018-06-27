@@ -38,8 +38,15 @@ public class UiSchemaMapper implements JacksonMapper<ObjectNode, ObjectNode, Obj
     }
 
     @Override
-    public ObjectNode fromArray(JacksonArrayType array) {
-        return null;
+    public ObjectNode fromArray(JacksonArrayType array, JacksonTypeMapper<ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode> mapper) {
+        ObjectNode mappedType = mapper.mapJacksonType(array.getItemType());
+        if (mappedType != null && !mappedType.isEmpty(null)) {
+            ObjectNode result = JsonNodeFactory.instance.objectNode();
+            result.set("items", mappedType);
+            return result;
+        } else {
+            return null;
+        }
     }
 
     @Override

@@ -22,7 +22,7 @@ public class JacksonTypeMapper<T, Object extends T, Array extends T, Number exte
         if (jacksonType instanceof JacksonObjectType) {
             return mapper.fromObject((JacksonObjectType) jacksonType, this);
         } else if (jacksonType instanceof JacksonArrayType) {
-            return mapper.fromArray((JacksonArrayType) jacksonType);
+            return mapper.fromArray((JacksonArrayType) jacksonType, this);
         } else if (jacksonType instanceof JacksonNumberType) {
             return mapper.fromNumber((JacksonNumberType) jacksonType);
         } else if (jacksonType instanceof JacksonPrimitiveType) {
