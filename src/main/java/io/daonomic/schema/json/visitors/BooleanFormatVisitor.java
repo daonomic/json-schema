@@ -13,11 +13,9 @@ public class BooleanFormatVisitor extends AbstractFormatVisitor<PrimitiveType> i
 
     @Override
     public void format(JsonValueFormat format) {
-        //todo
     }
 
     @Override
     public void enumTypes(Set<String> enums) {
-        //todo
     }
 }
