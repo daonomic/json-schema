@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class IntegerFormatVisitor extends AbstractTypeVisitor<JacksonNumberType> implements JsonIntegerFormatVisitor {
     IntegerFormatVisitor(ObjectMapper objectMapper) {
-        super(new JacksonNumberType(), objectMapper);
+        super(new JacksonNumberType(JsonParser.NumberType.INT), objectMapper);
     }
 
     @Override

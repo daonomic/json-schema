@@ -15,6 +15,7 @@ public class TestUiSchema {
     @ShowIf(field = "value", value = "some")
     public Child optionalChild;
     public List<Child2> children;
+    public List<String> ignored;
 
     public static class Child {
         @UiWidget(value = "external-select", options = {
