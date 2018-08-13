@@ -11,6 +11,9 @@
       "ui:options" : {
         "url" : "childTest"
       }
+    },
+    "items" : {
+      "ui:inline" : true
     }
   },
   "optionalChild" : {
@@ -19,6 +22,9 @@
       "ui:options" : {
         "url" : "childTest"
       }
+    },
+    "items" : {
+      "ui:inline" : true
     }
   },
   "children" : {

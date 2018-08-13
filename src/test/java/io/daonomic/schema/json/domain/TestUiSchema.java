@@ -1,6 +1,7 @@
 package io.daonomic.schema.json.domain;
 
 import io.daonomic.schema.json.custom.ShowIf;
+import io.daonomic.schema.ui.annotations.UiInline;
 import io.daonomic.schema.ui.annotations.UiWidget;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class TestUiSchema {
             @UiWidget.Option(key = "url", value = "childTest")
         })
         public String value;
+
+        @UiInline
+        public List<String> items;
     }
 
     public static class Child2 {
