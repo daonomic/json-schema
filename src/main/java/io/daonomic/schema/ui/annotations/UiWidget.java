@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
-@HandlerClass(UiWidgetHandler.class)
+@PropertyHandlerClass(UiWidgetHandler.class)
 public @interface UiWidget {
     String value();
     Option[] options() default {};

@@ -7,13 +7,21 @@ import io.daonomic.jackson.mapper.JacksonMapper;
 import io.daonomic.jackson.mapper.JacksonTypeMapper;
 import io.daonomic.schema.json.InstanceCache;
 import io.daonomic.schema.ui.handlers.UiSchemaPropertyHandler;
+import io.daonomic.schema.ui.handlers.UiSchemaTypeHandler;
 
 import java.lang.annotation.Annotation;
 
 public class UiSchemaMapper implements JacksonMapper<ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode> {
+    @SuppressWarnings("unchecked")
     @Override
     public ObjectNode fromObject(JacksonObjectType object, JacksonTypeMapper<ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode, ObjectNode> mapper) {
         ObjectNode result = JsonNodeFactory.instance.objectNode();
+        for (Annotation annotation : object.getJavaType().getRawClass().getAnnotations()) {
+            Class<? extends UiSchemaTypeHandler> handlerClass = UiSchemaTypeHandler.getByAnnotation(annotation);
+            if (handlerClass != null) {
+                InstanceCache.INSTANCE.get(handlerClass).handle(annotation, result);
+            }
+        }
         for (JacksonProperty property : object.getProperties()) {
             ObjectNode node = handleProperty(property, mapper.mapJacksonType(property.getType()));
             if (node != null) {

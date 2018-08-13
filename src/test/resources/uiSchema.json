@@ -12,8 +12,10 @@
         "url" : "childTest"
       }
     },
-    "items" : {
-      "ui:inline" : true
+    "list" : {
+      "items" : {
+        "ui:inline" : true
+      }
     }
   },
   "optionalChild" : {
@@ -23,8 +25,10 @@
         "url" : "childTest"
       }
     },
-    "items" : {
-      "ui:inline" : true
+    "list" : {
+      "items" : {
+        "ui:inline" : true
+      }
     }
   },
   "children" : {

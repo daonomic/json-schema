@@ -24,12 +24,16 @@ public class TestUiSchema {
         })
         public String value;
 
-        @UiInline
-        public List<String> items;
+        public List<Child3> list;
     }
 
     public static class Child2 {
         @UiWidget("ui:hidden")
+        public String value;
+    }
+
+    @UiInline
+    public static class Child3 {
         public String value;
     }
 }

@@ -1,6 +1,6 @@
 package io.daonomic.schema.ui.annotations;
 
-import io.daonomic.schema.ui.handlers.UiSchemaPropertyHandler;
+import io.daonomic.schema.ui.handlers.UiSchemaTypeHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})
-public @interface HandlerClass {
-    Class<? extends UiSchemaPropertyHandler> value();
+public @interface TypeHandlerClass {
+    Class<? extends UiSchemaTypeHandler> value();
 }
