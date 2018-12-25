@@ -8,13 +8,6 @@ import io.daonomic.jackson.domain.JacksonType;
 
 /**
  * Common visitor for transforming jackson meta-model to some other form
- * еще раз, как этот visitor работает, я его передаю в objectMapper, он смотрит, что там за тип объекта и вызывает соответствующий метод
- * дальше будут вызваны соответствующие методы в visitor'е который создается (или используется)
- * <p>
- * какая модель выйдет?
- * 1. тип -> объект, примитив, etc.
- * 2. у объекта есть свойства = (name, type)
- * 2.
  */
 public class JacksonVisitor extends AbstractVisitor implements JsonFormatVisitorWrapper {
     private final ObjectMapper objectMapper;
@@ -34,42 +27,42 @@ public class JacksonVisitor extends AbstractVisitor implements JsonFormatVisitor
     }
 
     @Override
-    public JsonArrayFormatVisitor expectArrayFormat(JavaType type) throws JsonMappingException {
+    public JsonArrayFormatVisitor expectArrayFormat(JavaType type) {
         return setCurrent(new ArrayFormatVisitor(objectMapper));
     }
 
     @Override
-    public JsonStringFormatVisitor expectStringFormat(JavaType type) throws JsonMappingException {
+    public JsonStringFormatVisitor expectStringFormat(JavaType type) {
         return setCurrent(new StringFormatVisitor(objectMapper));
     }
 
     @Override
-    public JsonNumberFormatVisitor expectNumberFormat(JavaType type) throws JsonMappingException {
+    public JsonNumberFormatVisitor expectNumberFormat(JavaType type) {
         return setCurrent(new NumberFormatVisitor(objectMapper));
     }
 
     @Override
-    public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) throws JsonMappingException {
+    public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) {
         return setCurrent(new IntegerFormatVisitor(objectMapper));
     }
 
     @Override
-    public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) throws JsonMappingException {
+    public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) {
         return setCurrent(new BooleanFormatVisitor(objectMapper));
     }
 
     @Override
-    public JsonNullFormatVisitor expectNullFormat(JavaType type) throws JsonMappingException {
+    public JsonNullFormatVisitor expectNullFormat(JavaType type) {
         return null;
     }
 
     @Override
-    public JsonAnyFormatVisitor expectAnyFormat(JavaType type) throws JsonMappingException {
+    public JsonAnyFormatVisitor expectAnyFormat(JavaType type) {
         return null;
     }
 
     @Override
-    public JsonMapFormatVisitor expectMapFormat(JavaType type) throws JsonMappingException {
+    public JsonMapFormatVisitor expectMapFormat(JavaType type) {
         return null;
     }
 
