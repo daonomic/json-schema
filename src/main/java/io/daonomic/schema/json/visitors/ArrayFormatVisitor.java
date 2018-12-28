@@ -26,7 +26,7 @@ public class ArrayFormatVisitor extends AbstractFormatVisitor<ArrayType> impleme
 
     @Override
     public void itemsFormat(JsonFormatTypes format) throws JsonMappingException {
-        schemaType.setItemType(PrimitiveType.fromString(format.value()));
+        schemaType.setItemType(PrimitiveType.fromString(format.value(), propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override

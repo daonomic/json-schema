@@ -54,6 +54,22 @@ public class JsonSchemaTest {
         }
     }
 
+    @Test
+    public void testWithLabelResolver() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        LabelResolver resolver = key -> {
+            if (key.equals("ONE")) return "one";
+            if (key.equals("TWO")) return "two";
+            return key;
+        };
+        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(EnumTest.class), objectMapper, new AnnotationPropertyHandlerFactory(resolver)).toJsonSchema());
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("EnumTestLabelResolver.json")) {
+            assertNotNull(in, "not found resource. schema=" + jsonSchema);
+            assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
+        }
+    }
+
     @DataProvider
     public static Object[][] data2() {
         return new Object[][]{

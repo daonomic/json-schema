@@ -4,7 +4,8 @@
   "properties" : {
     "testField" : {
       "type" : "string",
-      "enum" : [ "VALUE1", "VALUE2", "VALUE3" ]
+      "enum" : [ "VALUE1", "VALUE2", "VALUE3" ],
+      "enumNames" : [ "VALUE1", "VALUE2", "VALUE3" ]
     }
   },
   "dependencies" : {

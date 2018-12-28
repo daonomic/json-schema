@@ -4,7 +4,8 @@
   "properties" : {
     "testValue" : {
       "type" : "string",
-      "enum" : [ "ONE", "TWO", "THREE" ]
+      "enum" : [ "ONE", "TWO", "THREE" ],
+      "enumNames" : [ "ONE", "TWO", "THREE" ]
     }
   },
   "dependencies" : {

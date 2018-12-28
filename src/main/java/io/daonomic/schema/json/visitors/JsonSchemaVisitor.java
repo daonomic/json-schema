@@ -24,22 +24,22 @@ public class JsonSchemaVisitor extends JsonFormatVisitorWrapper.Base {
 
     @Override
     public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) {
-        return setCurrent(new IntegerFormatVisitor(objectMapper));
+        return setCurrent(new IntegerFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonNumberFormatVisitor expectNumberFormat(JavaType type) {
-        return setCurrent(new NumberFormatVisitor(objectMapper));
+        return setCurrent(new NumberFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonStringFormatVisitor expectStringFormat(JavaType type) {
-        return setCurrent(new StringFormatVisitor(objectMapper));
+        return setCurrent(new StringFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) {
-        return setCurrent(new BooleanFormatVisitor(objectMapper));
+        return setCurrent(new BooleanFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override

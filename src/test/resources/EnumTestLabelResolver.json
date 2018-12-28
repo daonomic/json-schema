@@ -4,12 +4,12 @@
     "field1" : {
       "type" : "string",
       "enum" : [ "ONE", "TWO", "THREE" ],
-      "enumNames" : [ "ONE", "TWO", "THREE" ]
+      "enumNames" : [ "one", "two", "THREE" ]
     },
     "field2" : {
       "type" : "string",
       "enum" : [ "ONE", "THREE" ],
-      "enumNames" : [ "ONE", "THREE" ]
+      "enumNames" : [ "one", "THREE" ]
     }
   }
 }

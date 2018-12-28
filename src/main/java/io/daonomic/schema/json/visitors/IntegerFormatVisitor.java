@@ -4,13 +4,14 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonIntegerFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
+import io.daonomic.schema.json.LabelResolver;
 
 import java.util.Set;
 
 public class IntegerFormatVisitor extends AbstractFormatVisitor<PrimitiveType> implements JsonIntegerFormatVisitor {
 
-    public IntegerFormatVisitor(ObjectMapper objectMapper) {
-        super(objectMapper, new PrimitiveType(PrimitiveType.Type.NUMBER));
+    public IntegerFormatVisitor(ObjectMapper objectMapper, LabelResolver labels) {
+        super(objectMapper, new PrimitiveType(PrimitiveType.Type.NUMBER, labels));
     }
 
     @Override

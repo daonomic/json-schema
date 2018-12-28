@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.daonomic.schema.json.JsonSchemaType;
+import io.daonomic.schema.json.LabelResolver;
 import io.daonomic.schema.json.annotations.Order;
 import io.daonomic.schema.json.annotations.PropertyAnnotationHandler;
 import io.daonomic.schema.json.visitors.*;
@@ -31,7 +32,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     }
 
     @Override
-    public JsonSchemaProperty handle(ObjectType objectType, JsonSchemaProperty property, ShowIf annotation) {
+    public JsonSchemaProperty handle(ObjectType objectType, JsonSchemaProperty property, ShowIf annotation, LabelResolver labels) {
         objectType.addDependency(annotation.field(), existing -> {
             if (existing == null) {
                 return changeDependency(objectType, new OneOfType(), property, annotation);
@@ -178,7 +179,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     }
 
     @Override
-    public JsonSchemaProperty handle(JsonSchemaProperty property, ShowIf annotation) {
+    public JsonSchemaProperty handle(JsonSchemaProperty property, ShowIf annotation, LabelResolver labels) {
         return null;
     }
 

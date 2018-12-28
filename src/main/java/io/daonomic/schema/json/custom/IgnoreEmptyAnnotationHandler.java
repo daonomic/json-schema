@@ -1,5 +1,6 @@
 package io.daonomic.schema.json.custom;
 
+import io.daonomic.schema.json.LabelResolver;
 import io.daonomic.schema.json.annotations.Order;
 import io.daonomic.schema.json.annotations.PropertyAnnotationHandler;
 import io.daonomic.schema.json.visitors.JsonSchemaProperty;
@@ -11,7 +12,7 @@ import java.util.List;
 @Order(Integer.MAX_VALUE - 1000)
 public class IgnoreEmptyAnnotationHandler implements PropertyAnnotationHandler<IgnoreEmpty> {
     @Override
-    public JsonSchemaProperty handle(JsonSchemaProperty property, IgnoreEmpty annotation) {
+    public JsonSchemaProperty handle(JsonSchemaProperty property, IgnoreEmpty annotation, LabelResolver labels) {
         if (property.isRequired()) {
             return property;
         }

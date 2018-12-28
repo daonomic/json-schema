@@ -3,6 +3,7 @@ package io.daonomic.schema.json.custom;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.daonomic.schema.json.LabelResolver;
 import io.daonomic.schema.json.annotations.PropertyAnnotationHandler;
 import io.daonomic.schema.json.visitors.JsonSchemaProperty;
 
@@ -17,7 +18,7 @@ public class DefaultAnnotationHandler implements PropertyAnnotationHandler<Defau
     }
 
     @Override
-    public JsonSchemaProperty handle(JsonSchemaProperty property, Default annotation) {
+    public JsonSchemaProperty handle(JsonSchemaProperty property, Default annotation, LabelResolver labels) {
         return property.addHandler(node -> {
             switch (annotation.type()) {
                 case STRING:

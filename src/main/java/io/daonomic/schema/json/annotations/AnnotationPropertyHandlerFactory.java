@@ -1,10 +1,7 @@
 package io.daonomic.schema.json.annotations;
 
 import com.fasterxml.jackson.databind.BeanProperty;
-import io.daonomic.schema.json.InstanceCache;
-import io.daonomic.schema.json.MultiplePropertyHandler;
-import io.daonomic.schema.json.PropertyHandler;
-import io.daonomic.schema.json.PropertyHandlerFactory;
+import io.daonomic.schema.json.*;
 import io.daonomic.schema.json.handlers.EmailPropertyAnnotationHandler;
 import io.daonomic.schema.json.handlers.RequiredPropertyAnnotationHandler;
 
@@ -18,13 +15,24 @@ import java.util.stream.Collectors;
 
 public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory {
     private final Map<Class<? extends Annotation>, Class<? extends PropertyAnnotationHandler>> defaultAnnotationHandlers;
+    private final LabelResolver labels;
 
     public AnnotationPropertyHandlerFactory() {
+        this(new DefaultLabelResolver());
+    }
+
+    public AnnotationPropertyHandlerFactory(LabelResolver labels) {
+        this.labels = labels;
         this.defaultAnnotationHandlers = new HashMap<>();
         defaultAnnotationHandlers.put(NotNull.class, RequiredPropertyAnnotationHandler.class);
         defaultAnnotationHandlers.put(NotBlank.class, RequiredPropertyAnnotationHandler.class);
         defaultAnnotationHandlers.put(NotEmpty.class, RequiredPropertyAnnotationHandler.class);
         defaultAnnotationHandlers.put(Email.class, EmailPropertyAnnotationHandler.class);
+    }
+
+    @Override
+    public LabelResolver getLabelResolver() {
+        return labels;
     }
 
     @SuppressWarnings("unchecked")
@@ -34,13 +42,13 @@ public class AnnotationPropertyHandlerFactory implements PropertyHandlerFactory 
         for (Annotation annotation : beanProperty.getMember().getAllAnnotations().annotations()) {
             Class<? extends PropertyAnnotationHandler> handlerClass = getByAnnotation(annotation);
             if (handlerClass != null) {
-                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation), getOrder(handlerClass)));
+                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation, labels), getOrder(handlerClass)));
             }
         }
         for (Annotation annotation : beanProperty.getType().getRawClass().getAnnotations()) {
             Class<? extends PropertyAnnotationHandler> handlerClass = getByAnnotation(annotation);
             if (handlerClass != null) {
-                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation), getOrder(handlerClass)));
+                list.add(new HandlerAndOrder(new AnnotationPropertyHandler(InstanceCache.INSTANCE.get(handlerClass), annotation, labels), getOrder(handlerClass)));
             }
         }
         return new MultiplePropertyHandler(list.stream().sorted(Comparator.comparingInt(e2 -> e2.order)).map(e -> e.handler).collect(Collectors.toList()));
