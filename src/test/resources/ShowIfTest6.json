@@ -1,6 +1,5 @@
 {
   "type" : "object",
-  "required" : [ "testValue" ],
   "properties" : {
     "testValue" : {
       "type" : "boolean"

@@ -78,6 +78,7 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
     public List<String> getRequiredProperties() {
         return properties.stream()
             .filter(JsonSchemaProperty::isRequired)
+            .filter(p -> !(p.getType() instanceof PrimitiveType && ((PrimitiveType) p.getType()).getType() == PrimitiveType.Type.BOOLEAN))
             .map(JsonSchemaProperty::getName)
             .collect(toList());
     }
