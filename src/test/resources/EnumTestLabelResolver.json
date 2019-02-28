@@ -10,6 +10,14 @@
       "type" : "string",
       "enum" : [ "ONE", "THREE" ],
       "enumNames" : [ "one", "THREE" ]
+    },
+    "field3" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "enum" : [ "ONE", "TWO", "THREE" ],
+        "enumNames" : [ "one", "two", "THREE" ]
+      }
     }
   }
 }

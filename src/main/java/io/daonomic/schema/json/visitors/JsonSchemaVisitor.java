@@ -19,32 +19,32 @@ public class JsonSchemaVisitor extends JsonFormatVisitorWrapper.Base {
 
     @Override
     public JsonObjectFormatVisitor expectObjectFormat(JavaType type) {
-        return setCurrent(new ObjectFormatVisitor(objectMapper, propertyHandlerFactory));
+        return setCurrent(new ObjectFormatVisitor(objectMapper, type, propertyHandlerFactory));
     }
 
     @Override
     public JsonIntegerFormatVisitor expectIntegerFormat(JavaType type) {
-        return setCurrent(new IntegerFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
+        return setCurrent(new IntegerFormatVisitor(objectMapper, type, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonNumberFormatVisitor expectNumberFormat(JavaType type) {
-        return setCurrent(new NumberFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
+        return setCurrent(new NumberFormatVisitor(objectMapper, type, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonStringFormatVisitor expectStringFormat(JavaType type) {
-        return setCurrent(new StringFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
+        return setCurrent(new StringFormatVisitor(objectMapper, type, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonBooleanFormatVisitor expectBooleanFormat(JavaType type) {
-        return setCurrent(new BooleanFormatVisitor(objectMapper, propertyHandlerFactory.getLabelResolver()));
+        return setCurrent(new BooleanFormatVisitor(objectMapper, type, propertyHandlerFactory.getLabelResolver()));
     }
 
     @Override
     public JsonArrayFormatVisitor expectArrayFormat(JavaType type) {
-        return setCurrent(new ArrayFormatVisitor(objectMapper, propertyHandlerFactory));
+        return setCurrent(new ArrayFormatVisitor(objectMapper, type, propertyHandlerFactory));
     }
 
     @Override

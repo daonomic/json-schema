@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @PropertyAnnotationHandlerClass(CustomEnumAnnotationHandler.class)
 public @interface CustomEnum {
     String[] value();
+    String labelPrefix() default "";
 }

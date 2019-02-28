@@ -14,8 +14,8 @@ import java.util.Set;
 public class ArrayFormatVisitor extends AbstractFormatVisitor<ArrayType> implements JsonArrayFormatVisitor {
     private final PropertyHandlerFactory propertyHandlerFactory;
 
-    protected ArrayFormatVisitor(ObjectMapper objectMapper, PropertyHandlerFactory propertyHandlerFactory) {
-        super(objectMapper, new ArrayType());
+    protected ArrayFormatVisitor(ObjectMapper objectMapper, JavaType javaType, PropertyHandlerFactory propertyHandlerFactory) {
+        super(objectMapper, javaType, new ArrayType());
         this.propertyHandlerFactory = propertyHandlerFactory;
     }
 
