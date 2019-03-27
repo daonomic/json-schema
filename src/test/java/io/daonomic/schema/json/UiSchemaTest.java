@@ -23,8 +23,19 @@ public class UiSchemaTest {
     public void testUiSchema() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        JsonNode uiSchema = UiSchema.generate(objectMapper.constructType(TestUiSchema.class), objectMapper);
+        JsonNode uiSchema = UiSchema.generate(objectMapper.constructType(TestUiSchema.class), objectMapper, l -> l);
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchema.json")) {
+            assertNotNull(in, "not found resource. schema=" + uiSchema);
+            assertEquals(objectMapper.writeValueAsString(uiSchema), IOUtils.toString(in, StandardCharsets.UTF_8));
+        }
+    }
+
+    @Test
+    public void testEnumWithDescriptions() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        JsonNode uiSchema = UiSchema.generate(objectMapper.constructType(EnumTestWithDescriptions.class), objectMapper, l -> l);
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchemaWithDescriptions.json")) {
             assertNotNull(in, "not found resource. schema=" + uiSchema);
             assertEquals(objectMapper.writeValueAsString(uiSchema), IOUtils.toString(in, StandardCharsets.UTF_8));
         }

@@ -1,0 +1,8 @@
+{
+  "field1" : {
+    "ui:widget" : "text-block-selector",
+    "options" : {
+      "descriptions" : [ "MyEnum.ONE", "MyEnum.TWO", "MyEnum.THREE" ]
+    }
+  }
+}
