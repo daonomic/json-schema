@@ -1,0 +1,12 @@
+{
+  "type" : "object",
+  "properties" : {
+    "noTitle" : {
+      "type" : "string"
+    },
+    "withTitle" : {
+      "type" : "string",
+      "title" : "This is title"
+    }
+  }
+}

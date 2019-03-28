@@ -24,6 +24,7 @@ public class JsonSchemaTest {
             new Object[]{Parent.class},
             new Object[]{RequiredAnnotationTest.class},
             new Object[]{TitleTest.class},
+            new Object[]{TitleKotlinTest.class},
             new Object[]{DefaultTest.class},
             new Object[]{IgnoreTest.class},
             new Object[]{ShowIfTest1.class},
