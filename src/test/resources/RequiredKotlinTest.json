@@ -1,0 +1,15 @@
+{
+  "type" : "object",
+  "required" : [ "required", "requiredString" ],
+  "properties" : {
+    "optional" : {
+      "type" : "number"
+    },
+    "required" : {
+      "type" : "number"
+    },
+    "requiredString" : {
+      "type" : "string"
+    }
+  }
+}

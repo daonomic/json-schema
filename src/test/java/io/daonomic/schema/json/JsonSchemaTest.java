@@ -2,6 +2,7 @@ package io.daonomic.schema.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import io.daonomic.schema.json.annotations.AnnotationPropertyHandlerFactory;
 import io.daonomic.schema.json.domain.*;
 import io.daonomic.schema.json.visitors.JsonSchemaVisitor;
@@ -23,6 +24,7 @@ public class JsonSchemaTest {
             new Object[]{SimpleChildTest.class},
             new Object[]{Parent.class},
             new Object[]{RequiredAnnotationTest.class},
+            new Object[]{RequiredKotlinTest.class},
             new Object[]{TitleTest.class},
             new Object[]{TitleKotlinTest.class},
             new Object[]{DefaultTest.class},
@@ -46,7 +48,7 @@ public class JsonSchemaTest {
 
     @Test(dataProvider = "data1")
     public void test1(Class testClass) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
@@ -57,7 +59,7 @@ public class JsonSchemaTest {
 
     @Test
     public void testWithLabelResolver() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         LabelResolver resolver = key -> {
             if (key.equals("ONE")) return "one";
@@ -73,7 +75,7 @@ public class JsonSchemaTest {
 
     @Test
     public void testWithLabelResolver2() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         LabelResolver resolver = key -> {
             if (key.equals("MyEnum.ONE")) return "one";
@@ -97,7 +99,7 @@ public class JsonSchemaTest {
 
     @Test(dataProvider = "data2")
     public void test2(Class testClass) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
@@ -105,5 +107,11 @@ public class JsonSchemaTest {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
         }
+    }
+
+    public static ObjectMapper createMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new KotlinModule());
+        return mapper;
     }
 }
