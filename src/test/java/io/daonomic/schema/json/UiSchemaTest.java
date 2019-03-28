@@ -3,10 +3,7 @@ package io.daonomic.schema.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import io.daonomic.schema.json.JsonSchemaType;
-import io.daonomic.schema.json.annotations.AnnotationPropertyHandlerFactory;
-import io.daonomic.schema.json.domain.*;
-import io.daonomic.schema.json.visitors.JsonSchemaVisitor;
+import io.daonomic.schema.json.domain.TestUiSchema;
 import io.daonomic.schema.ui.UiSchema;
 import org.apache.commons.io.IOUtils;
 import org.testng.annotations.Test;
@@ -25,17 +22,6 @@ public class UiSchemaTest {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         JsonNode uiSchema = UiSchema.generate(objectMapper.constructType(TestUiSchema.class), objectMapper, l -> l);
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchema.json")) {
-            assertNotNull(in, "not found resource. schema=" + uiSchema);
-            assertEquals(objectMapper.writeValueAsString(uiSchema), IOUtils.toString(in, StandardCharsets.UTF_8));
-        }
-    }
-
-    @Test
-    public void testEnumWithDescriptions() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        JsonNode uiSchema = UiSchema.generate(objectMapper.constructType(EnumTestWithDescriptions.class), objectMapper, l -> l);
-        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("uiSchemaWithDescriptions.json")) {
             assertNotNull(in, "not found resource. schema=" + uiSchema);
             assertEquals(objectMapper.writeValueAsString(uiSchema), IOUtils.toString(in, StandardCharsets.UTF_8));
         }

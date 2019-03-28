@@ -1,0 +1,23 @@
+{
+  "type" : "object",
+  "properties" : {
+    "field1" : {
+      "type" : "string",
+      "enum" : [ "ONE", "TWO", "THREE" ],
+      "enumNames" : [ "ONE", "TWO", "THREE" ]
+    },
+    "field2" : {
+      "type" : "string",
+      "enum" : [ "ONE", "THREE" ],
+      "enumNames" : [ "ONE", "THREE" ]
+    },
+    "field3" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "enum" : [ "ONE", "TWO", "THREE" ],
+        "enumNames" : [ "ONE", "TWO", "THREE" ]
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 package io.daonomic.schema.json.visitors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -7,8 +8,11 @@ import io.daonomic.schema.json.JsonSchemaType;
 import io.daonomic.schema.json.LabelResolver;
 import io.daonomic.schema.json.Utils;
 import io.daonomic.schema.json.custom.CustomLabels;
+import io.daonomic.schema.json.custom.JsonSchemaIgnore;
+import io.daonomic.schema.ui.annotations.EnumDescriptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -47,7 +51,22 @@ public class PrimitiveType implements JsonSchemaType<PrimitiveType> {
         ObjectNode node = JsonNodeFactory.instance.objectNode();
         node.put("type", type.name().toLowerCase());
         if (enums != null) {
-            node.set("enum", Utils.toArrayNode(enums));
+
+            final List<String> finalEnums;
+            if (javaType.getRawClass().isEnum()) {
+                Enum[] values = ((Class<Enum>) javaType.getRawClass()).getEnumConstants();
+                finalEnums = Arrays.stream(values).filter(it -> {
+                    try {
+                        return javaType.getRawClass().getField(it.name()).getAnnotation(JsonSchemaIgnore.class) == null;
+                    } catch (NoSuchFieldException e) {
+                        return false;
+                    }
+                }).map(Enum::name).collect(toList());
+            } else {
+                finalEnums = enums;
+            }
+
+            node.set("enum", Utils.toArrayNode(finalEnums));
             if (javaType != null) {
                 CustomLabels customLabels = javaType.getRawClass().getAnnotation(CustomLabels.class);
                 if (customLabels != null) {
@@ -59,7 +78,12 @@ public class PrimitiveType implements JsonSchemaType<PrimitiveType> {
                     } else {
                         prefix = customLabels.value() + ".";
                     }
-                    node.set("enumNames", Utils.toArrayNode(enums.stream().map(name -> labels.resolve(prefix + name)).collect(toList())));
+                    node.set("enumNames", Utils.toArrayNode(finalEnums.stream().map(name -> labels.resolve(prefix + name)).collect(toList())));
+                }
+                EnumDescriptions enumDescriptions = javaType.getRawClass().getAnnotation(EnumDescriptions.class);
+                if (enumDescriptions != null) {
+                    String prefix = enumDescriptions.value() + ".";
+                    node.set("enumDescriptions", Utils.toArrayNode(finalEnums.stream().map(name -> labels.resolve(prefix + name)).collect(toList())));
                 }
             }
         }

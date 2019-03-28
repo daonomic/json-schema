@@ -42,7 +42,9 @@ public class JsonSchemaTest {
             new Object[]{OptionalChildTest3.class},
             new Object[]{ArrayTest.class},
             new Object[]{EmailTest.class},
-            new Object[]{EnumTest.class}
+            new Object[]{EnumTest.class},
+            new Object[]{EnumTestWithDescriptions.class},
+            new Object[]{EnumWithIgnoreTest.class}
         };
     }
 

@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "properties" : {
+    "field1" : {
+      "type" : "string",
+      "enum" : [ "ONE", "TWO", "THREE" ],
+      "enumDescriptions" : [ "MyEnumDescription.ONE", "MyEnumDescription.TWO", "MyEnumDescription.THREE" ]
+    }
+  }
+}

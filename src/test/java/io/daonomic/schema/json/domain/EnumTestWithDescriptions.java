@@ -7,7 +7,7 @@ public class EnumTestWithDescriptions {
     @UiWidget(value = "text-block-selector")
     public MyEnum field1;
 
-    @EnumDescriptions("MyEnum")
+    @EnumDescriptions("MyEnumDescription")
     public enum MyEnum {
         ONE,
         TWO,
