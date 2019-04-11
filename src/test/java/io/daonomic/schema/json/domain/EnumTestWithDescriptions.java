@@ -1,6 +1,6 @@
 package io.daonomic.schema.json.domain;
 
-import io.daonomic.schema.ui.annotations.EnumDescriptions;
+import io.daonomic.schema.json.custom.EnumDescriptions;
 import io.daonomic.schema.ui.annotations.UiWidget;
 
 public class EnumTestWithDescriptions {

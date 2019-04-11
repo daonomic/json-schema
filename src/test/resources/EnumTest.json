@@ -18,6 +18,14 @@
         "enum" : [ "ONE", "TWO", "THREE" ],
         "enumNames" : [ "ONE", "TWO", "THREE" ]
       }
+    },
+    "customEnums" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "enum" : [ "ONE", "TWO" ],
+        "enumNames" : [ "ONE", "TWO" ]
+      }
     }
   }
 }

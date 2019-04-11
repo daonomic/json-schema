@@ -1,5 +1,6 @@
 package io.daonomic.schema.json.visitors;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,9 +16,13 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaType {
+public class ObjectType extends JsonSchemaType<ObjectType> {
     private final List<JsonSchemaProperty> properties = new ArrayList<>();
     private final Map<String, Dependency> dependencies = new HashMap<>();
+
+    public ObjectType(JavaType javaType) {
+        super(javaType);
+    }
 
     public void addProperty(JsonSchemaProperty property) {
         this.properties.add(property);
@@ -34,7 +39,7 @@ public class ObjectType extends HasHandlers<ObjectType> implements JsonSchemaTyp
     }
 
     public ObjectType copy() {
-        ObjectType copy = new ObjectType();
+        ObjectType copy = new ObjectType(javaType);
         for (JsonSchemaProperty property : properties) {
             copy.addProperty(property.copy());
         }

@@ -15,7 +15,7 @@ public class JsonSchemaProperty extends HasHandlers<JsonSchemaProperty> {
     }
 
     public ObjectNode toJsonNode() {
-        ObjectNode result = type.toJsonSchema();
+        ObjectNode result = type.toJsonSchemaExternal();
         handleNode(result);
         return result;
     }

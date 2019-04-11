@@ -156,7 +156,7 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     }
 
     private ObjectType createPositive(JsonSchemaProperty property, ShowIf annotation) {
-        ObjectType result = new ObjectType();
+        ObjectType result = new ObjectType(null);
         result.addProperty(new JsonSchemaProperty(annotation.field(), new EnumSchemaType(asSet(annotation.value())), false));
         if (annotation.required()) {
             result.addProperty(property.required(true));
@@ -167,13 +167,13 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
     }
 
     private ObjectType createNegative(String dependsOn, Set<String> negative) {
-        ObjectType result = new ObjectType();
+        ObjectType result = new ObjectType(null);
         result.addProperty(new JsonSchemaProperty(dependsOn, new EnumSchemaType(negative), false));
         return result;
     }
 
     private JsonSchemaType createNotPositive(String dependsOn, Set<String> positive) {
-        ObjectType result = new ObjectType();
+        ObjectType result = new ObjectType(null);
         result.addProperty(new JsonSchemaProperty(dependsOn, new NotType(new EnumSchemaType(positive)), false));
         return result;
     }
@@ -183,10 +183,11 @@ public class ShowIfAnnotationHandler implements PropertyAnnotationHandler<ShowIf
         return null;
     }
 
-    private class EnumSchemaType implements JsonSchemaType<EnumSchemaType> {
+    private class EnumSchemaType extends JsonSchemaType<EnumSchemaType> {
         private Set<String> values;
 
         private EnumSchemaType(Set<String> values) {
+            super(null);
             this.values = values;
         }
 

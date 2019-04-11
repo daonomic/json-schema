@@ -7,40 +7,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
-import io.daonomic.schema.json.PropertyHandlerFactory;
+import io.daonomic.schema.json.HandlerFactory;
+import io.daonomic.schema.json.JsonSchemaType;
 
 import java.util.Set;
 
 public class ObjectFormatVisitor extends AbstractFormatVisitor<ObjectType> implements JsonObjectFormatVisitor {
-    private final PropertyHandlerFactory propertyHandlerFactory;
+    private final HandlerFactory handlerFactory;
 
-    protected ObjectFormatVisitor(ObjectMapper objectMapper, JavaType javaType, PropertyHandlerFactory propertyHandlerFactory) {
-        super(objectMapper, javaType, new ObjectType());
-        this.propertyHandlerFactory = propertyHandlerFactory;
+    protected ObjectFormatVisitor(ObjectMapper objectMapper, JavaType javaType, HandlerFactory handlerFactory) {
+        super(objectMapper, javaType, new ObjectType(null));
+        this.handlerFactory = handlerFactory;
     }
 
     @Override
     public void property(BeanProperty writer) throws JsonMappingException {
-        JsonSchemaProperty property = propertyHandlerFactory.create(writer).handle(schemaType, new JsonSchemaProperty(writer.getName(), JsonSchemaVisitor.inspect(writer.getType(), objectMapper, propertyHandlerFactory), true));
+        JsonSchemaType propertyType = JsonSchemaVisitor.inspect(writer.getType(), objectMapper, handlerFactory);
+        JsonSchemaProperty property = handlerFactory.create(writer).handle(schemaType, new JsonSchemaProperty(writer.getName(), handlerFactory.create(writer.getType()).handle(propertyType), true));
         if (property != null)
             schemaType.addProperty(property);
     }
 
     @Override
     public void property(String name, JsonFormatVisitable handler, JavaType propertyTypeHint) throws JsonMappingException {
-        schemaType.addProperty(new JsonSchemaProperty(name, JsonSchemaVisitor.inspect(propertyTypeHint, objectMapper, propertyHandlerFactory), true));
+        schemaType.addProperty(new JsonSchemaProperty(name, JsonSchemaVisitor.inspect(propertyTypeHint, objectMapper, handlerFactory), true));
     }
 
     @Override
     public void optionalProperty(BeanProperty writer) throws JsonMappingException {
-        JsonSchemaProperty property = propertyHandlerFactory.create(writer).handle(schemaType, new JsonSchemaProperty(writer.getName(), JsonSchemaVisitor.inspect(writer.getType(), objectMapper, propertyHandlerFactory), writer.getType().isPrimitive() && writer.getType().getRawClass() != boolean.class));
+        JsonSchemaType propertyType = JsonSchemaVisitor.inspect(writer.getType(), objectMapper, handlerFactory);
+        JsonSchemaProperty property = handlerFactory.create(writer).handle(schemaType, new JsonSchemaProperty(writer.getName(), handlerFactory.create(writer.getType()).handle(propertyType), writer.getType().isPrimitive() && writer.getType().getRawClass() != boolean.class));
         if (property != null)
             schemaType.addProperty(property);
     }
 
     @Override
     public void optionalProperty(String name, JsonFormatVisitable handler, JavaType propertyTypeHint) throws JsonMappingException {
-        schemaType.addProperty(new JsonSchemaProperty(name, JsonSchemaVisitor.inspect(propertyTypeHint, objectMapper, propertyHandlerFactory), propertyTypeHint.isPrimitive()));
+        schemaType.addProperty(new JsonSchemaProperty(name, JsonSchemaVisitor.inspect(propertyTypeHint, objectMapper, handlerFactory), propertyTypeHint.isPrimitive()));
     }
 
     @Override

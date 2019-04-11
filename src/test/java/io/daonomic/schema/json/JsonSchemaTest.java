@@ -3,7 +3,7 @@ package io.daonomic.schema.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
-import io.daonomic.schema.json.annotations.AnnotationPropertyHandlerFactory;
+import io.daonomic.schema.json.annotations.AnnotationHandlerFactory;
 import io.daonomic.schema.json.domain.*;
 import io.daonomic.schema.json.visitors.JsonSchemaVisitor;
 import org.apache.commons.io.IOUtils;
@@ -53,7 +53,7 @@ public class JsonSchemaTest {
     public void test1(Class testClass) throws IOException {
         ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
+        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationHandlerFactory()).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
@@ -69,7 +69,7 @@ public class JsonSchemaTest {
             if (key.equals("TWO")) return "two";
             return key;
         };
-        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(EnumTest.class), objectMapper, new AnnotationPropertyHandlerFactory(resolver)).toJsonSchema());
+        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(EnumTest.class), objectMapper, new AnnotationHandlerFactory(resolver)).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream("EnumTestLabelResolver.json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
@@ -86,8 +86,8 @@ public class JsonSchemaTest {
             if (key.equals("MyEnum.THREE")) return "THREE";
             return key;
         };
-        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(EnumTestWithCustomLabels.class), objectMapper, new AnnotationPropertyHandlerFactory(resolver)).toJsonSchema());
-        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("EnumTestLabelResolver.json")) {
+        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(EnumTestWithCustomLabels.class), objectMapper, new AnnotationHandlerFactory(resolver)).toJsonSchema());
+        try (final InputStream in = getClass().getClassLoader().getResourceAsStream("EnumTestLabelResolver2.json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));
         }
@@ -105,7 +105,7 @@ public class JsonSchemaTest {
         ObjectMapper objectMapper = createMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationPropertyHandlerFactory()).toJsonSchema());
+        String jsonSchema = objectMapper.writeValueAsString(JsonSchemaVisitor.inspect(objectMapper.constructType(testClass), objectMapper, new AnnotationHandlerFactory()).toJsonSchema());
         try (final InputStream in = getClass().getClassLoader().getResourceAsStream(testClass.getSimpleName() + ".json")) {
             assertNotNull(in, "not found resource. schema=" + jsonSchema);
             assertEquals(jsonSchema, IOUtils.toString(in, StandardCharsets.UTF_8));

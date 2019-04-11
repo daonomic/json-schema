@@ -25,6 +25,6 @@ public class SchemaDependency implements Dependency<SchemaDependency> {
 
     @Override
     public JsonNode toJsonSchema() {
-        return schemaType.toJsonSchema();
+        return schemaType.toJsonSchemaExternal();
     }
 }

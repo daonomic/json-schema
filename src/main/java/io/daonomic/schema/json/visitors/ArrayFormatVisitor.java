@@ -7,26 +7,26 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
-import io.daonomic.schema.json.PropertyHandlerFactory;
+import io.daonomic.schema.json.HandlerFactory;
 
 import java.util.Set;
 
 public class ArrayFormatVisitor extends AbstractFormatVisitor<ArrayType> implements JsonArrayFormatVisitor {
-    private final PropertyHandlerFactory propertyHandlerFactory;
+    private final HandlerFactory handlerFactory;
 
-    protected ArrayFormatVisitor(ObjectMapper objectMapper, JavaType javaType, PropertyHandlerFactory propertyHandlerFactory) {
+    protected ArrayFormatVisitor(ObjectMapper objectMapper, JavaType javaType, HandlerFactory handlerFactory) {
         super(objectMapper, javaType, new ArrayType());
-        this.propertyHandlerFactory = propertyHandlerFactory;
+        this.handlerFactory = handlerFactory;
     }
 
     @Override
     public void itemsFormat(JsonFormatVisitable handler, JavaType elementType) throws JsonMappingException {
-        schemaType.setItemType(JsonSchemaVisitor.inspect(elementType, objectMapper, propertyHandlerFactory));
+        schemaType.setItemType(handlerFactory.create(elementType).handle(JsonSchemaVisitor.inspect(elementType, objectMapper, handlerFactory)));
     }
 
     @Override
-    public void itemsFormat(JsonFormatTypes format) throws JsonMappingException {
-        schemaType.setItemType(PrimitiveType.fromString(format.value(), propertyHandlerFactory.getLabelResolver()));
+    public void itemsFormat(JsonFormatTypes format) {
+        schemaType.setItemType(PrimitiveType.fromString(format.value(), handlerFactory.getLabelResolver()));
     }
 
     @Override

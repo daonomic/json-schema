@@ -3,10 +3,7 @@ package io.daonomic.schema.json;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Utils {
     public static ArrayNode toArrayNode(Collection<String> strings) {
@@ -15,6 +12,14 @@ public class Utils {
             arrayNode.add(string);
         }
         return arrayNode;
+    }
+
+    public static List<String> fromArrayNode(ArrayNode arrayNode) {
+        ArrayList<String> result = new ArrayList<>(arrayNode.size());
+        for (int i = 0; i < arrayNode.size(); i++) {
+            result.add(arrayNode.get(i).asText());
+        }
+        return result;
     }
 
     @SafeVarargs
