@@ -2,6 +2,7 @@ package io.daonomic.schema.json.domain;
 
 import io.daonomic.schema.json.custom.CustomEnumProperty;
 import io.daonomic.schema.json.custom.CustomLabels;
+import io.daonomic.schema.json.custom.MinItems;
 import io.daonomic.schema.json.custom.UniqueItems;
 
 import java.util.List;
@@ -11,6 +12,7 @@ public class EnumUniqueItemsTest {
     @CustomEnumProperty({"ONE", "THREE"})
     public MyEnum field2;
     @UniqueItems
+    @MinItems(0)
     public List<MyEnum> field3;
 
     @CustomLabels("")
