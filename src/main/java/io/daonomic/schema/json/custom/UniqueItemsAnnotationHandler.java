@@ -2,9 +2,11 @@ package io.daonomic.schema.json.custom;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import io.daonomic.schema.json.LabelResolver;
+import io.daonomic.schema.json.annotations.Order;
 import io.daonomic.schema.json.annotations.PropertyAnnotationHandler;
 import io.daonomic.schema.json.visitors.JsonSchemaProperty;
 
+@Order(9)
 public class UniqueItemsAnnotationHandler implements PropertyAnnotationHandler<UniqueItems> {
     @Override
     public JsonSchemaProperty handle(JsonSchemaProperty property, UniqueItems annotation, LabelResolver labels) {
